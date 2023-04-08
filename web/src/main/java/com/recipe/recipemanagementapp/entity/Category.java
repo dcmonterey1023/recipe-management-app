@@ -1,19 +1,15 @@
-package com.recipe.recipemanagementapp.model;
+package com.recipe.recipemanagementapp.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-
-import java.util.Set;
 
 @Entity(name = "CATEGORY_TBL")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode(exclude = {"recipes"})
 public class Category {
 
     @Id

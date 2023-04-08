@@ -3,16 +3,10 @@ package com.recipe.recipemanagementapp.service;
 import com.recipe.recipemanagementapp.dto.CategoryResponse;
 import com.recipe.recipemanagementapp.exception.CategoryAlreadyExistException;
 import com.recipe.recipemanagementapp.exception.InvalidRecipeCategoryException;
-import com.recipe.recipemanagementapp.model.Category;
+import com.recipe.recipemanagementapp.entity.Category;
 import com.recipe.recipemanagementapp.repository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j

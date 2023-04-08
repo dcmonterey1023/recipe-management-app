@@ -1,7 +1,6 @@
 package com.recipe.recipemanagementapp.repository;
 
-import com.recipe.recipemanagementapp.dto.RecipeSearchRequest;
-import com.recipe.recipemanagementapp.model.Recipe;
+import com.recipe.recipemanagementapp.entity.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

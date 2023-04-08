@@ -1,4 +1,4 @@
-package com.recipe.recipemanagementapp.model;
+package com.recipe.recipemanagementapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -18,17 +18,14 @@ public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @NotBlank(message = "Name should not be null/blank/empty.")
     private String name;
     @Min(value = 1, message = "Count should not be less than 1.")
     private int count;
-
     @NotBlank(message = "Unit of Measure should not be null/blank/empty.")
     private String unitOfMeasure;
     @Size(max = 255, message = "Description should not exceed 255 characters.")
     private String description;
-
     @ManyToOne
     @JsonIgnore
     private Recipe recipe;

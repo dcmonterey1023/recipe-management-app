@@ -1,9 +1,8 @@
 package com.recipe.recipemanagementapp.controller;
 
 import com.recipe.recipemanagementapp.dto.CategoryResponse;
-import com.recipe.recipemanagementapp.model.Category;
+import com.recipe.recipemanagementapp.entity.Category;
 import com.recipe.recipemanagementapp.service.CategoryService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
