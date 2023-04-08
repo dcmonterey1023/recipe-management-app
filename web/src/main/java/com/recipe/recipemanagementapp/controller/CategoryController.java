@@ -3,9 +3,12 @@ package com.recipe.recipemanagementapp.controller;
 import com.recipe.recipemanagementapp.dto.CategoryResponse;
 import com.recipe.recipemanagementapp.entity.Category;
 import com.recipe.recipemanagementapp.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/recipe/category")
@@ -24,7 +27,13 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<String> addCategory(@RequestBody Category category){
-        categoryService.addRecipeCategory(category);
+        categoryService.addCategory(category);
+        return new ResponseEntity<>("Successfully Created", HttpStatus.CREATED);
+    }
+
+    @PostMapping
+    public ResponseEntity<String> addCategories(@RequestBody @Valid List<Category> categories){
+        categoryService.addMultipleCategory(categories);
         return new ResponseEntity<>("Successfully Created", HttpStatus.CREATED);
     }
 

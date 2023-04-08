@@ -76,17 +76,14 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public void createRecipe(Recipe recipe) {
         log.info("RecipeService createRecipe: check if recipe name {} is already existing", recipe.getName());
-        Optional<Recipe> recipeOptional = recipeRepository.findByName(recipe.getName());
-
-        validateRecipeCategory(recipe.getCategory());
-        Recipe mappedRecipe = mapIngredients(recipe);
-
-        if(recipeOptional.isPresent()){
-            throw new RecipeAlreadyExistException(
-                    String.format("Recipe %s already exist", recipe.getName()));
-        }
-        recipeRepository.save(mappedRecipe);
+        recipeRepository.save(transformRecipe(recipe));
         log.info("RecipeService createRecipe: done saving new recipe {}", recipe.getName());
+    }
+
+    @Override
+    public void createRecipes(List<Recipe> recipes){
+        recipes.forEach(this::validateAddRecipe);
+        recipeRepository.saveAll(recipes);
     }
 
     @Override
@@ -106,13 +103,24 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional(rollbackFor = {SQLException.class})
     public void updateRecipeById(Recipe recipe, long id) {
 
-        //validations
-        this.getRecipeById(id);
-        validateRecipeCategory(recipe.getCategory());
-        mapIngredients(recipe);
-
+        getRecipeById(id);
+        Recipe mappedRecipe = transformRecipe(recipe);
         ingredientRepository.deleteAllByRecipeId(id);
-        recipeRepository.save(recipe);
+        recipeRepository.save(mappedRecipe);
+    }
+
+    private Recipe transformRecipe(Recipe recipe){
+        validateAddRecipe(recipe);
+        return mapIngredients(recipe);
+    }
+
+    private void validateAddRecipe(Recipe recipe){
+        Optional<Recipe> recipeOptional = recipeRepository.findByName(recipe.getName());
+        if(recipeOptional.isPresent()){
+            throw new RecipeAlreadyExistException(
+                    String.format("Recipe %s already exist.", recipe.getName()));
+        }
+        validateRecipeCategory(recipe.getCategory());
     }
 
     private void validateRecipeCategory(String categoryName){
