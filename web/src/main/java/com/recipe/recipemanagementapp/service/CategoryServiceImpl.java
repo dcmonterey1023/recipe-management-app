@@ -31,18 +31,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void addCategory(Category category) {
-        var optionalCategory = categoryRepository.findByName(category.getName());
-        if(optionalCategory.isPresent()){
-            throw new CategoryAlreadyExistException(
-                    String.format("Recipe Category %s already exist. ", category.getName())
-            );
-        }
+        validateAddCategory(category);
         categoryRepository.save(category);
     }
 
     @Override
     public void addMultipleCategory(List<Category> categories) {
-        categories.forEach(category -> validateCategory(category.getName()));
+        categories.forEach(this::validateAddCategory);
         categoryRepository.saveAll(categories);
     }
 
@@ -51,6 +46,15 @@ public class CategoryServiceImpl implements CategoryService {
         if(categoryRepository.findByName(categoryName).isEmpty()){
             throw new InvalidRecipeCategoryException(
                     String.format("Category %s not found", categoryName));
+        }
+    }
+
+    private void validateAddCategory(Category category){
+        var optionalCategory = categoryRepository.findByName(category.getName());
+        if(optionalCategory.isPresent()){
+            throw new CategoryAlreadyExistException(
+                    String.format("Recipe Category %s already exist. ", category.getName())
+            );
         }
     }
 }

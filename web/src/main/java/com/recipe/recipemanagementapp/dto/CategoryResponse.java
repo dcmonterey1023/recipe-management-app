@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryResponse {
 
-    private List<Category> categories = new ArrayList<>();
     private int count;
+    private List<Category> categories = new ArrayList<>();
 
 }
