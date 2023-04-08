@@ -2,9 +2,7 @@ package com.recipe.recipemanagementapp.service;
 
 import com.recipe.recipemanagementapp.dto.RecipeResponse;
 import com.recipe.recipemanagementapp.dto.RecipeSearchRequest;
-import com.recipe.recipemanagementapp.model.Recipe;
-
-import java.util.List;
+import com.recipe.recipemanagementapp.entity.Recipe;
 
 public interface RecipeService {
 

@@ -1,6 +1,6 @@
 package com.recipe.recipemanagementapp.dto;
 
-import com.recipe.recipemanagementapp.model.Recipe;
+import com.recipe.recipemanagementapp.entity.Recipe;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

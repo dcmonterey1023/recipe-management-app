@@ -1,6 +1,6 @@
 package com.recipe.recipemanagementapp.repository;
 
-import com.recipe.recipemanagementapp.model.Ingredient;
+import com.recipe.recipemanagementapp.entity.Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IngredientRepository extends JpaRepository<Ingredient, Long> {

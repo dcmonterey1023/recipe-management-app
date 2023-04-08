@@ -1,9 +1,9 @@
 package com.recipe.recipemanagementapp.testdatafactory;
 
 import com.recipe.recipemanagementapp.dto.RecipeResponse;
-import com.recipe.recipemanagementapp.model.Category;
-import com.recipe.recipemanagementapp.model.Ingredient;
-import com.recipe.recipemanagementapp.model.Recipe;
+import com.recipe.recipemanagementapp.entity.Category;
+import com.recipe.recipemanagementapp.entity.Ingredient;
+import com.recipe.recipemanagementapp.entity.Recipe;
 
 import java.util.HashSet;
 import java.util.List;

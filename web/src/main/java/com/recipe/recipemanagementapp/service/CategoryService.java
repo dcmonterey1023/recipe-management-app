@@ -1,10 +1,7 @@
 package com.recipe.recipemanagementapp.service;
 
 import com.recipe.recipemanagementapp.dto.CategoryResponse;
-import com.recipe.recipemanagementapp.model.Category;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import com.recipe.recipemanagementapp.entity.Category;
 
 public interface CategoryService {
 

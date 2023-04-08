@@ -1,7 +1,7 @@
 package com.recipe.recipemanagementapp.service;
 
 import com.recipe.recipemanagementapp.dto.RecipeResponse;
-import com.recipe.recipemanagementapp.model.Recipe;
+import com.recipe.recipemanagementapp.entity.Recipe;
 import com.recipe.recipemanagementapp.repository.IngredientRepository;
 import com.recipe.recipemanagementapp.repository.RecipeRepository;
 import com.recipe.recipemanagementapp.testdatafactory.RecipeTestDataFactory;

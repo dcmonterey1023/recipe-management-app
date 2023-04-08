@@ -1,13 +1,11 @@
-package com.recipe.recipemanagementapp.model;
+package com.recipe.recipemanagementapp.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "RECIPE_TBL")
