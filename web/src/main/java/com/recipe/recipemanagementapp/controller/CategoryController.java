@@ -31,7 +31,7 @@ public class CategoryController {
         return new ResponseEntity<>("Successfully Created", HttpStatus.CREATED);
     }
 
-    @PostMapping
+    @PostMapping("/all")
     public ResponseEntity<String> addCategories(@RequestBody @Valid List<Category> categories){
         categoryService.addMultipleCategory(categories);
         return new ResponseEntity<>("Successfully Created", HttpStatus.CREATED);
