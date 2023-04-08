@@ -52,7 +52,7 @@ public class RecipeController {
     @PostMapping("/all")
     public ResponseEntity<String> createRecipes(@RequestBody @Valid List<Recipe> recipes){
         log.info("RecipeController: createRecipe: Start");
-        recipes.forEach(recipeService::createRecipe);
+        recipeService.createRecipes(recipes);
         return new ResponseEntity<>("Successfully Created", HttpStatus.CREATED);
     }
 

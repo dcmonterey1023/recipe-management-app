@@ -8,6 +8,8 @@ import com.recipe.recipemanagementapp.repository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class CategoryServiceImpl implements CategoryService {
@@ -28,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void addRecipeCategory(Category category) {
+    public void addCategory(Category category) {
         var optionalCategory = categoryRepository.findByName(category.getName());
         if(optionalCategory.isPresent()){
             throw new CategoryAlreadyExistException(
@@ -36,6 +38,12 @@ public class CategoryServiceImpl implements CategoryService {
             );
         }
         categoryRepository.save(category);
+    }
+
+    @Override
+    public void addMultipleCategory(List<Category> categories) {
+        categories.forEach(category -> validateCategory(category.getName()));
+        categoryRepository.saveAll(categories);
     }
 
     @Override
