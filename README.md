@@ -1,5 +1,15 @@
 # recipe-management-app
 
+# Dependencies
+- Java 17
+- Spring 6
+- Spring-boot 3
+- Spring Data JPA
+- H2 In Memory DB
+- Lombok
+- Maven Assembler
+
+
 # TODO in Code
 
 - Update logging
@@ -9,10 +19,10 @@
 - Run Tests
 - Check edge cases
 
-# TODO Update README.md
+# TODO in README.md
 
 ## Include:
-- Architecuture of Choice
+- Architecture of Choice
 - Technologies
 - How to Run
 - How to Test
