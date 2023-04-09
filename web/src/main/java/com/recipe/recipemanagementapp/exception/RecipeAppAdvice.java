@@ -61,13 +61,21 @@ public class RecipeAppAdvice {
         );
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<RecipeAppErrorResponse> handle(Exception exception){
-//        return new ResponseEntity<>(
-//                createErrorResponse(exception, HttpStatus.BAD_REQUEST.value()),
-//                HttpStatus.BAD_REQUEST
-//        );
-//    }
+    @ExceptionHandler(IngredientAlreadyExistException.class)
+    public ResponseEntity<RecipeAppErrorResponse> handle(IngredientAlreadyExistException exception){
+        return new ResponseEntity<>(
+                createErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.value(), null),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(InvalidRecipeException.class)
+    public ResponseEntity<RecipeAppErrorResponse> handle(InvalidRecipeException exception){
+        return new ResponseEntity<>(
+                createErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.value(), null),
+                HttpStatus.BAD_REQUEST
+        );
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handle(MethodArgumentNotValidException exception){

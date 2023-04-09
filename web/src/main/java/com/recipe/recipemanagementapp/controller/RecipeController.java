@@ -64,10 +64,10 @@ public class RecipeController {
     }
 
     @PatchMapping("/{recipeId}")
-    public ResponseEntity<String> updateRecipe(@RequestBody Recipe recipe, @PathVariable long recipeId){
+    public ResponseEntity<String> updateRecipe(@RequestBody @Valid Recipe recipe, @PathVariable long recipeId){
         log.info("RecipeController: updateRecipe: Start");
         recipeService.updateRecipeById(recipe, recipeId);
-        return new ResponseEntity<>("Successfully Created", HttpStatus.OK);
+        return new ResponseEntity<>("Successfully Updated", HttpStatus.OK);
     }
 
 }

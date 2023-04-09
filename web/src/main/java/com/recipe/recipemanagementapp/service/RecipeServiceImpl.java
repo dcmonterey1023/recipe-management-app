@@ -3,10 +3,8 @@ package com.recipe.recipemanagementapp.service;
 import com.recipe.recipemanagementapp.constants.UnitOfMeasure;
 import com.recipe.recipemanagementapp.dto.RecipeResponse;
 import com.recipe.recipemanagementapp.dto.RecipeSearchRequest;
-import com.recipe.recipemanagementapp.exception.RecipeAlreadyExistException;
-import com.recipe.recipemanagementapp.exception.RecipeNotFoundException;
-import com.recipe.recipemanagementapp.exception.RecipeSearchException;
-import com.recipe.recipemanagementapp.exception.UnitOfMeasureNotValidException;
+import com.recipe.recipemanagementapp.entity.Nutrition;
+import com.recipe.recipemanagementapp.exception.*;
 import com.recipe.recipemanagementapp.entity.Ingredient;
 import com.recipe.recipemanagementapp.entity.Recipe;
 import com.recipe.recipemanagementapp.repository.IngredientRepository;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -27,22 +26,24 @@ public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final CategoryService categoryService;
-    private final IngredientRepository ingredientRepository;
+    private final IngredientService ingredientService;
+    private final NutritionService nutritionService;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              CategoryService categoryService,
-                             IngredientRepository ingredientRepository){
+                             IngredientService ingredientService,
+                             NutritionService nutritionService){
         this.recipeRepository = recipeRepository;
         this.categoryService = categoryService;
-        this.ingredientRepository = ingredientRepository;
+        this.ingredientService = ingredientService;
+        this.nutritionService = nutritionService;
     }
 
     @Override
     public RecipeResponse getAllRecipe() {
         RecipeResponse recipeResponse = new RecipeResponse();
         log.info("RecipeService getAllRecipe: calling recipe repository");
-        recipeRepository.findAll()
-                .forEach(recipe -> recipeResponse.getRecipes().add(recipe));
+        recipeResponse.setRecipes(recipeRepository.findAll());
         recipeResponse.setCount(recipeResponse.getRecipes().size());
         log.info("RecipeService getAllRecipe: done calling recipe repository");
         return recipeResponse;
@@ -76,13 +77,17 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public void createRecipe(Recipe recipe) {
         log.info("RecipeService createRecipe: check if recipe name {} is already existing", recipe.getName());
+        validateAddRecipe(recipe);
         recipeRepository.save(transformRecipe(recipe));
         log.info("RecipeService createRecipe: done saving new recipe {}", recipe.getName());
     }
 
     @Override
     public void createRecipes(List<Recipe> recipes){
-        recipes.forEach(this::validateAddRecipe);
+        recipes.forEach(recipe -> {
+            validateAddRecipe(recipe);
+            transformRecipe(recipe);
+        });
         recipeRepository.saveAll(recipes);
     }
 
@@ -102,16 +107,19 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     @Transactional(rollbackFor = {SQLException.class})
     public void updateRecipeById(Recipe recipe, long id) {
-
         getRecipeById(id);
-        Recipe mappedRecipe = transformRecipe(recipe);
-        ingredientRepository.deleteAllByRecipeId(id);
-        recipeRepository.save(mappedRecipe);
+        validateRecipeCategory(recipe.getCategory());
+        recipeRepository.save(transformRecipe(recipe));
     }
 
     private Recipe transformRecipe(Recipe recipe){
-        validateAddRecipe(recipe);
-        return mapIngredients(recipe);
+        recipe.setNutritions(mapNutritionValues(recipe));
+        recipe.setIngredients(mapIngredients(recipe));
+        return recipe;
+    }
+
+    private Set<Nutrition> mapNutritionValues(Recipe recipe){
+        return nutritionService.mapRecipeToNutrient(recipe);
     }
 
     private void validateAddRecipe(Recipe recipe){
@@ -121,40 +129,24 @@ public class RecipeServiceImpl implements RecipeService {
                     String.format("Recipe %s already exist.", recipe.getName()));
         }
         validateRecipeCategory(recipe.getCategory());
+        validateTimeUnits(recipe.getCook_time_unit(), recipe.getPrep_time_unit());
     }
 
-    private void validateRecipeCategory(String categoryName){
+    private void validateTimeUnits(String... unitOfTime){
+        List<String> chronoUnits = Arrays.stream(ChronoUnit.values()).map(Enum::name).toList();
+
+        boolean invalidUnitOfTime = Arrays.stream(unitOfTime)
+                .anyMatch(unit -> Strings.isBlank(unit) || !chronoUnits.contains(unit.toUpperCase()));
+
+        if(invalidUnitOfTime) throw new InvalidRecipeException("Preparation or Cooking time is not accepted.");
+    }
+
+    private void validateRecipeCategory(String categoryName) {
         categoryService.validateCategory(categoryName);
     }
 
-    private Recipe mapIngredients(Recipe recipe){
-
-        Set<Ingredient> ingredients = recipe.getIngredients()
-                .stream()
-                .map(ingredient -> Ingredient
-                        .builder()
-                        .name(ingredient.getName())
-                        .description(ingredient.getDescription())
-                        .count(ingredient.getCount())
-                        .unitOfMeasure(validateUnitOfMeasure(ingredient.getUnitOfMeasure()).name())
-                        .recipe(recipe)
-                        .build())
-                .collect(Collectors.toSet());
-
-        recipe.setIngredients(ingredients);
-        return recipe;
-    }
-
-    private UnitOfMeasure validateUnitOfMeasure(String unitOfMeasure){
-
-        return Arrays.stream(UnitOfMeasure.values())
-                .filter( unit -> unit.name().equalsIgnoreCase(unitOfMeasure))
-                .findAny()
-                .orElseThrow(
-                        () -> new UnitOfMeasureNotValidException(
-                                String.format("Unit of Measure %s not valid.", unitOfMeasure)
-                        )
-                );
+    private Set<Ingredient> mapIngredients(Recipe recipe){
+        return ingredientService.mapRecipeToIngredient(recipe);
     }
 
     private int convertStringToInt(String str){
