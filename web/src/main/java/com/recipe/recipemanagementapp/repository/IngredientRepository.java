@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
-
-    public void deleteAllByRecipeId(long id);
     public List<Ingredient> findAllByRecipeId(long recipeId);
 
 }

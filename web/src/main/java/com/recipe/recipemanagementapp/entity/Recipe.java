@@ -27,9 +27,9 @@ public class Recipe {
     @NotBlank(message = MessageConstants.NOT_BLANK_MESSAGE)
     @Size(max = 150)
     private String description;
-    @NotBlank(message = MessageConstants.NOT_BLANK_MESSAGE)
-    @Size(max = 1024)
-    private String instruction;
+    @Size(min = 1, message = "Instruction must have at least one entry.")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+    private Set<Instruction> instructions = new HashSet<>();
     @NotBlank(message = MessageConstants.NOT_BLANK_MESSAGE)
     private String category;
     @NotBlank(message = MessageConstants.NOT_BLANK_MESSAGE)

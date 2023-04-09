@@ -24,6 +24,8 @@ class RecipeServiceImplTest {
     CategoryServiceImpl categoryService;
     IngredientService ingredientService;
     NutritionService nutritionService;
+
+    InstructionService instructionService;
     @Mock
     RecipeRepository recipeRepository;
     @BeforeEach
@@ -33,7 +35,8 @@ class RecipeServiceImplTest {
                 recipeRepository,
                 categoryService,
                 ingredientService,
-                nutritionService);
+                nutritionService,
+                instructionService);
     }
 
     @Test
