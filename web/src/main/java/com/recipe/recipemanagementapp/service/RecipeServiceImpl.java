@@ -3,6 +3,7 @@ package com.recipe.recipemanagementapp.service;
 import com.recipe.recipemanagementapp.constants.UnitOfMeasure;
 import com.recipe.recipemanagementapp.dto.RecipeResponse;
 import com.recipe.recipemanagementapp.dto.RecipeSearchRequest;
+import com.recipe.recipemanagementapp.entity.Instruction;
 import com.recipe.recipemanagementapp.entity.Nutrition;
 import com.recipe.recipemanagementapp.exception.*;
 import com.recipe.recipemanagementapp.entity.Ingredient;
@@ -28,15 +29,18 @@ public class RecipeServiceImpl implements RecipeService {
     private final CategoryService categoryService;
     private final IngredientService ingredientService;
     private final NutritionService nutritionService;
+    private final InstructionService instructionService;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              CategoryService categoryService,
                              IngredientService ingredientService,
-                             NutritionService nutritionService){
+                             NutritionService nutritionService,
+                             InstructionService instructionService){
         this.recipeRepository = recipeRepository;
         this.categoryService = categoryService;
         this.ingredientService = ingredientService;
         this.nutritionService = nutritionService;
+        this.instructionService = instructionService;
     }
 
     @Override
@@ -114,12 +118,17 @@ public class RecipeServiceImpl implements RecipeService {
 
     private Recipe transformRecipe(Recipe recipe){
         recipe.setNutritions(mapNutritionValues(recipe));
+        recipe.setInstructions(mapInstructions(recipe));
         recipe.setIngredients(mapIngredients(recipe));
         return recipe;
     }
 
     private Set<Nutrition> mapNutritionValues(Recipe recipe){
         return nutritionService.mapRecipeToNutrient(recipe);
+    }
+
+    private Set<Instruction> mapInstructions(Recipe recipe){
+        return instructionService.mapInstructionToRecipe(recipe);
     }
 
     private void validateAddRecipe(Recipe recipe){

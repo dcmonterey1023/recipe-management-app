@@ -1,10 +1,8 @@
 package com.recipe.recipemanagementapp.testdatafactory;
 
 import com.recipe.recipemanagementapp.dto.RecipeResponse;
-import com.recipe.recipemanagementapp.entity.Category;
-import com.recipe.recipemanagementapp.entity.Ingredient;
-import com.recipe.recipemanagementapp.entity.Nutrition;
-import com.recipe.recipemanagementapp.entity.Recipe;
+import com.recipe.recipemanagementapp.entity.*;
+
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +15,10 @@ public class RecipeTestDataFactory {
                 .description("Pinoy staple food")
                 .category("VEGETARIAN")
                 .cuisine("FILIPINO")
-                .instruction("Saute garlic")
+                .instructions(Set.of(
+                        Instruction.builder().step_order(1).instruction("Cut the pork in cubes.").build(),
+                        Instruction.builder().step_order(1).instruction("Season the pork.").build()
+                ))
                 .ingredients(Set.of(getIngredientTestData()))
                 .prep_time(1)
                 .prep_time_unit("hour")
