@@ -2,31 +2,38 @@ package com.recipe.recipemanagementapp.service;
 
 import com.recipe.recipemanagementapp.dto.RecipeResponse;
 import com.recipe.recipemanagementapp.entity.Recipe;
-import com.recipe.recipemanagementapp.repository.IngredientRepository;
 import com.recipe.recipemanagementapp.repository.RecipeRepository;
 import com.recipe.recipemanagementapp.testdatafactory.RecipeTestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class RecipeServiceImplTest {
 
     RecipeService recipeService;
     CategoryServiceImpl categoryService;
+    IngredientService ingredientService;
+    NutritionService nutritionService;
     @Mock
     RecipeRepository recipeRepository;
-
-    @Mock
-    IngredientRepository ingredientRepository;
     @BeforeEach
-    void setUp() {
+    void init() {
         MockitoAnnotations.openMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository, categoryService, ingredientRepository);
+        recipeService = new RecipeServiceImpl(
+                recipeRepository,
+                categoryService,
+                ingredientService,
+                nutritionService);
     }
 
     @Test
@@ -44,16 +51,16 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    @DisplayName("Get Recipe with ID of 1")
+    @DisplayName("When Get Recipe by Id 1, then return recipe")
     void getRecipeById() {
         //given id = 1
         Recipe recipe = RecipeTestDataFactory.getRecipeTestData();
         //when
-        when(recipeService.getRecipeById(1)).thenReturn(recipe);
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(recipe));
         //then
         assertAll(
-                () -> assertEquals(recipeService.getAllRecipe().getCount(), 1),
-                () -> assertEquals(recipeService.getAllRecipe().getRecipes().get(1).getName(), "Pinoy Adobo")
+                () -> assertEquals(recipeService.getRecipeById(1).getName(), "Pinoy Adobo"),
+                () -> assertEquals(recipeService.getRecipeById(1).getName(), "Pinoy Adobo")
         );
     }
 
