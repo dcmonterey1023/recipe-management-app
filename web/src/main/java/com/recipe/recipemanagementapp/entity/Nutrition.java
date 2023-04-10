@@ -8,7 +8,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Entity(name = "NUTRITION_TBL")
+@Entity
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,7 +22,7 @@ public class Nutrition {
     @Size(max = 50, message = MessageConstants.NOT_BLANK_MESSAGE)
     private String name;
     @DecimalMin("0.000001")
-    @DecimalMax("0.99")
+    @DecimalMax("100.00")
     private double percent;
     @ManyToOne
     @JsonIgnore
