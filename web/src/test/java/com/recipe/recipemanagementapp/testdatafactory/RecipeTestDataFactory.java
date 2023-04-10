@@ -112,4 +112,14 @@ public class RecipeTestDataFactory {
                 .serving("4")
                 .build();
     }
+
+    public static RecipeSearchRequest getInvalidServingFilter(){
+        return RecipeSearchRequest.builder()
+                .category("VEGETARIAN")
+                .instruction("Season")
+                .ingredientExclude("onion")
+                .ingredientInclude("pok")
+                .serving("invalid")
+                .build();
+    }
 }

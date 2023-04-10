@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.recipe.recipemanagementapp.testdatafactory.RecipeTestDataFactory.getInvalidServingFilter;
 import static com.recipe.recipemanagementapp.testdatafactory.RecipeTestDataFactory.getRecipeSearchRequest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -51,12 +52,12 @@ class RecipeServiceImplTest {
 
     @Test
     @DisplayName("Get All Recipe returns size 1")
-    void getAllRecipe() {
+    void getAllRecipes() {
         //given
         RecipeResponse recipe = RecipeTestDataFactory.getRecipeResponse();
         //when
         when(recipeRepository.findAll()).thenReturn(recipe.recipes());
-        RecipeResponse response = recipeService.getAllRecipe();
+        RecipeResponse response = recipeService.getAllRecipes();
         //then
         assertAll(
                 () -> assertEquals(response.recipes().size(), 1),
@@ -73,7 +74,7 @@ class RecipeServiceImplTest {
         RecipeResponse recipe = new RecipeResponse();
         //when
         when(recipeRepository.findAll()).thenReturn(new ArrayList<>());
-        RecipeResponse response = recipeService.getAllRecipe();
+        RecipeResponse response = recipeService.getAllRecipes();
         //then
         assertAll(
                 () -> assertEquals(response.recipes().size(), 0),
@@ -127,8 +128,7 @@ class RecipeServiceImplTest {
     @Test
     void searchRecipeWithInvalidServing() {
         //given
-        RecipeSearchRequest recipeSearchRequest = getRecipeSearchRequest();
-        recipeSearchRequest.setServing("invalid");
+        RecipeSearchRequest recipeSearchRequest = getInvalidServingFilter();
         //when
         //then
         assertThrows(RecipeSearchException.class, () -> recipeService.searchRecipe(recipeSearchRequest));
