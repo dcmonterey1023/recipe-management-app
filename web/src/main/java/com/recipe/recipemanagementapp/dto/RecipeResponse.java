@@ -9,12 +9,9 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class RecipeResponse {
-
-    public int count;
-    public List<Recipe> recipes = new ArrayList<>();
+public record RecipeResponse(List<Recipe> recipes, int count) {
+    public RecipeResponse(){
+        this(new ArrayList<>(), 0);
+    }
 }

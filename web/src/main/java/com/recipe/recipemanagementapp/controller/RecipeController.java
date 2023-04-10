@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.Media;
 import java.util.List;
 
 @RestController
@@ -42,14 +43,14 @@ public class RecipeController {
         return new ResponseEntity<>(recipeService.searchRecipe(recipeSearchRequest), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createRecipe(@RequestBody @Valid Recipe recipe){
         log.info("RecipeController: createRecipe: Start");
         recipeService.createRecipe(recipe);
         return new ResponseEntity<>("Successfully Created", HttpStatus.CREATED);
     }
 
-    @PostMapping("/all")
+    @PostMapping(value = "/all", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createRecipes(@RequestBody @Valid List<Recipe> recipes){
         log.info("RecipeController: createRecipe: Start");
         recipeService.createRecipes(recipes);
@@ -63,7 +64,7 @@ public class RecipeController {
         return new ResponseEntity<>("Successfully Deleted", HttpStatus.OK);
     }
 
-    @PatchMapping("/{recipeId}")
+    @PatchMapping(value = "/{recipeId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateRecipe(@RequestBody @Valid Recipe recipe, @PathVariable long recipeId){
         log.info("RecipeController: updateRecipe: Start");
         recipeService.updateRecipeById(recipe, recipeId);
