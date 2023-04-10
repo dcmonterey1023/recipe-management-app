@@ -2,6 +2,7 @@ package com.recipe.recipemanagementapp.entity;
 
 import com.recipe.recipemanagementapp.constants.MessageConstants;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +12,8 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "RECIPE_TBL")
+@Entity
+@Table(indexes = @Index(columnList = "category"))
 @Data
 @Builder
 @NoArgsConstructor
@@ -27,6 +29,7 @@ public class Recipe {
     @NotBlank(message = MessageConstants.NOT_BLANK_MESSAGE)
     @Size(max = 150)
     private String description;
+    @Valid
     @Size(min = 1, message = "Instruction must have at least one entry.")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Instruction> instructions = new HashSet<>();
@@ -34,6 +37,7 @@ public class Recipe {
     private String category;
     @NotBlank(message = MessageConstants.NOT_BLANK_MESSAGE)
     private String cuisine;
+    @Valid
     @Size(min = 1, message = "Ingredient must have at least one entry.")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredients = new HashSet<>();
@@ -47,8 +51,9 @@ public class Recipe {
     private int cook_time;
     @NotBlank(message = MessageConstants.NOT_BLANK_MESSAGE)
     private String cook_time_unit;
+    @Valid
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Nutrition> nutritions = new HashSet<>();
-    @Size(max = 255, message = "Notes should not exceed 255 characters.")
+    @Size(max = 5000, message = "Notes should not exceed 255 characters.")
     private String notes;
 }

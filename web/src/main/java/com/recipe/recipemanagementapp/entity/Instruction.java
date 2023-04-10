@@ -7,7 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Entity(name = "INSTRUCTION_TBL")
+@Entity
+@Table(indexes = @Index(columnList = "instruction"))
 @Data
 @Builder
 @NoArgsConstructor

@@ -11,12 +11,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     public Optional<Recipe> findByName(String name);
 
     @Query("""
-            select recipe from RECIPE_TBL recipe
+            select recipe from Recipe recipe
             where (:category is null or recipe.category = :category)
-            and (:instruction is null or recipe.id in (select ins.recipe from INSTRUCTION_TBL ins where instruction like %:instruction%))
             and (:serving < 1 or recipe.serving = :serving)
-            and (:include is null or recipe.id in (select ing.recipe from INGREDIENT_TBL ing where name = :include))
-            and recipe.id not in (select ing.recipe from INGREDIENT_TBL ing where name = :exclude)
+            and (:instruction is null or recipe.id in (select ins.recipe from Instruction ins where instruction like %:instruction%))
+            and (:include is null or recipe.id in (select ing.recipe from Ingredient ing where name like %:include%))
+            and recipe.id not in (select ing.recipe from Ingredient ing where name like %:exclude%)
             """)
     public List<Recipe> findAllRecipeWithFilter(String category,
                                                 String instruction,

@@ -66,15 +66,14 @@ public class RecipeServiceImpl implements RecipeService {
 
         RecipeResponse recipeResponse = new RecipeResponse();
         int serving = convertStringToInt(recipeSearchRequest.getServing());
+        List<Recipe> recipes = recipeRepository.findAllRecipeWithFilter(recipeSearchRequest.getCategory(),
+                recipeSearchRequest.getInstruction(),
+                recipeSearchRequest.getIngredientInclude(),
+                recipeSearchRequest.getIngredientExclude(),
+                serving);
 
-        recipeRepository.findAllRecipeWithFilter(recipeSearchRequest.getCategory(),
-                        recipeSearchRequest.getInstruction(),
-                        recipeSearchRequest.getIngredientInclude(),
-                        recipeSearchRequest.getIngredientExclude(),
-                        serving)
-                .forEach(recipe -> recipeResponse.getRecipes().add(recipe));
-
-        recipeResponse.setCount(recipeResponse.getRecipes().size());
+        recipeResponse.setRecipes(recipes);
+        recipeResponse.setCount(recipes.size());
         return recipeResponse;
     }
 
@@ -82,7 +81,8 @@ public class RecipeServiceImpl implements RecipeService {
     public void createRecipe(Recipe recipe) {
         log.info("RecipeService createRecipe: check if recipe name {} is already existing", recipe.getName());
         validateAddRecipe(recipe);
-        recipeRepository.save(transformRecipe(recipe));
+        transformRecipe(recipe);
+        recipeRepository.save(recipe);
         log.info("RecipeService createRecipe: done saving new recipe {}", recipe.getName());
     }
 
@@ -123,14 +123,6 @@ public class RecipeServiceImpl implements RecipeService {
         return recipe;
     }
 
-    private Set<Nutrition> mapNutritionValues(Recipe recipe){
-        return nutritionService.mapRecipeToNutrient(recipe);
-    }
-
-    private Set<Instruction> mapInstructions(Recipe recipe){
-        return instructionService.mapInstructionToRecipe(recipe);
-    }
-
     private void validateAddRecipe(Recipe recipe){
         Optional<Recipe> recipeOptional = recipeRepository.findByName(recipe.getName());
         if(recipeOptional.isPresent()){
@@ -156,6 +148,12 @@ public class RecipeServiceImpl implements RecipeService {
 
     private Set<Ingredient> mapIngredients(Recipe recipe){
         return ingredientService.mapRecipeToIngredient(recipe);
+    }
+    private Set<Nutrition> mapNutritionValues(Recipe recipe){
+        return nutritionService.mapRecipeToNutrient(recipe);
+    }
+    private Set<Instruction> mapInstructions(Recipe recipe){
+        return instructionService.mapInstructionToRecipe(recipe);
     }
 
     private int convertStringToInt(String str){
