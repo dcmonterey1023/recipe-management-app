@@ -45,12 +45,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public RecipeResponse getAllRecipe() {
-        RecipeResponse recipeResponse = new RecipeResponse();
         log.info("RecipeService getAllRecipe: calling recipe repository");
-        recipeResponse.setRecipes(recipeRepository.findAll());
-        recipeResponse.setCount(recipeResponse.getRecipes().size());
-        log.info("RecipeService getAllRecipe: done calling recipe repository");
-        return recipeResponse;
+        List<Recipe> recipes = recipeRepository.findAll();
+        return new RecipeResponse(recipes, recipes.size());
     }
 
     @Override
@@ -58,13 +55,14 @@ public class RecipeServiceImpl implements RecipeService {
         log.info("RecipeService getRecipeById: calling recipe repository using id {}", id);
         return recipeRepository
                 .findById(id)
-                .orElseThrow(() -> new RecipeNotFoundException("Recipe Not Found"));
+                .orElseThrow(
+                        () -> new RecipeNotFoundException(String.format("Recipe with id %s not found", id))
+                );
     }
 
     @Override
     public RecipeResponse searchRecipe(RecipeSearchRequest recipeSearchRequest) {
 
-        RecipeResponse recipeResponse = new RecipeResponse();
         int serving = convertStringToInt(recipeSearchRequest.getServing());
         List<Recipe> recipes = recipeRepository.findAllRecipeWithFilter(recipeSearchRequest.getCategory(),
                 recipeSearchRequest.getInstruction(),
@@ -72,9 +70,7 @@ public class RecipeServiceImpl implements RecipeService {
                 recipeSearchRequest.getIngredientExclude(),
                 serving);
 
-        recipeResponse.setRecipes(recipes);
-        recipeResponse.setCount(recipes.size());
-        return recipeResponse;
+        return new RecipeResponse(recipes, recipes.size());
     }
 
     @Override

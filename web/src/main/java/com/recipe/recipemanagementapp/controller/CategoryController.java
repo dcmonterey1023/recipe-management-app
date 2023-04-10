@@ -20,7 +20,7 @@ public class CategoryController {
         this.categoryService = recipeCategoryService;
     }
     @GetMapping
-    public ResponseEntity<CategoryResponse> getAllRecipeCategory(){
+    public ResponseEntity<CategoryResponse> getAllRecipeCategory() {
         //TODO implement further checking
         return new ResponseEntity<>(categoryService.getAllCategory(), HttpStatus.OK);
     }

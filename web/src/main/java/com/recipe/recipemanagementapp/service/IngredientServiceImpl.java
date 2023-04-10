@@ -25,30 +25,6 @@ public class IngredientServiceImpl implements IngredientService {
         this.ingredientRepository = ingredientRepository;
         this.unitOfMeasureService = unitOfMeasureService;
     }
-
-    @Override
-    @Transactional(rollbackFor = SQLException.class)
-    public void addRecipeIngredient(Ingredient ingredient, long id) {
-//        Recipe recipe = recipeService.getRecipeById(id);
-//
-//        Optional<Ingredient> ingredientOptional = recipe.getIngredients()
-//                .stream()
-//                .filter(e -> e.getName().equalsIgnoreCase(ingredient.getName()))
-//                .findAny();
-//
-//        if(ingredientOptional.isPresent()){
-//            throw new IngredientAlreadyExistException(
-//                    String.format("Recipe with id %d has already a %s ingredient.", id, ingredient.getName()));
-//        }
-//        ingredient.setRecipe(recipe);
-//        recipe.getIngredients().add(ingredient);
-    }
-
-    @Override
-    public List<Ingredient> getAllIngredientsByRecipe(long recipeId) {
-        return ingredientRepository.findAllByRecipeId(recipeId);
-    }
-
     @Override
     public Set<Ingredient> mapRecipeToIngredient(Recipe recipe) {
 
