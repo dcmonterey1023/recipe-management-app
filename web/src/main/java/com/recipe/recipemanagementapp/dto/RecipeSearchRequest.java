@@ -7,15 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
 @Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class RecipeSearchRequest {
-
-    private String category;
-    private String instruction;
-    private String serving;
-    private String ingredientInclude;
-    private String ingredientExclude;
-
+public record RecipeSearchRequest(String category, String instruction, String serving,
+                                  String ingredientInclude, String ingredientExclude) {
 }

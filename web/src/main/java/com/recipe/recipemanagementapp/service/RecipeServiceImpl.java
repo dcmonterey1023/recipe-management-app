@@ -21,6 +21,9 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.recipe.recipemanagementapp.constants.ErrorMessageConstants.*;
+import static com.recipe.recipemanagementapp.constants.MessageConstants.*;
+
 @Service
 @Slf4j
 public class RecipeServiceImpl implements RecipeService {
@@ -44,42 +47,43 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeResponse getAllRecipe() {
-        log.info("RecipeService getAllRecipe: calling recipe repository");
+    public RecipeResponse getAllRecipes() {
+        log.info(GET_ALL_RECIPE + "retrieving recipe from repository.");
         List<Recipe> recipes = recipeRepository.findAll();
+        log.info(GET_ALL_RECIPE + "done retrieving recipes with {} records.", recipes.size());
         return new RecipeResponse(recipes, recipes.size());
     }
 
     @Override
     public Recipe getRecipeById(long id) {
-        log.info("RecipeService getRecipeById: calling recipe repository using id {}", id);
+        log.info(GET_RECIPE_BY_ID + "retrieving recipe from repository", id);
         return recipeRepository
                 .findById(id)
                 .orElseThrow(
-                        () -> new RecipeNotFoundException(String.format("Recipe with id %s not found", id))
+                        () -> new RecipeNotFoundException(String.format(RECIPE_NOT_FOUND, id))
                 );
     }
 
     @Override
     public RecipeResponse searchRecipe(RecipeSearchRequest recipeSearchRequest) {
+        int serving = convertStringToInt(recipeSearchRequest.serving());
 
-        int serving = convertStringToInt(recipeSearchRequest.getServing());
-        List<Recipe> recipes = recipeRepository.findAllRecipeWithFilter(recipeSearchRequest.getCategory(),
-                recipeSearchRequest.getInstruction(),
-                recipeSearchRequest.getIngredientInclude(),
-                recipeSearchRequest.getIngredientExclude(),
+        log.info(SEARCH_RECIPE + "retrieving recipes using passed filters.");
+        List<Recipe> recipes = recipeRepository.findAllRecipeWithFilter(recipeSearchRequest.category(),
+                recipeSearchRequest.instruction(),
+                recipeSearchRequest.ingredientInclude(),
+                recipeSearchRequest.ingredientExclude(),
                 serving);
-
         return new RecipeResponse(recipes, recipes.size());
     }
 
     @Override
     public void createRecipe(Recipe recipe) {
-        log.info("RecipeService createRecipe: check if recipe name {} is already existing", recipe.getName());
         validateAddRecipe(recipe);
         transformRecipe(recipe);
+        log.info(CREATE_RECIPE + "saving new recipe {}", recipe.getName());
         recipeRepository.save(recipe);
-        log.info("RecipeService createRecipe: done saving new recipe {}", recipe.getName());
+        log.info(CREATE_RECIPE + "done saving new recipe {}", recipe.getName());
     }
 
     @Override
@@ -93,15 +97,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public void deleteRecipeById(long id) {
-        log.info("RecipeService deleteRecipeById: check if recipe with id {} exist.", id);
+        //TODO use Predicate negate
+        log.info(DELETE_RECIPE + "check if recipe exist", id);
         recipeRepository.findById(id).orElseThrow(
                 () -> new RecipeNotFoundException(
-                        String.format("Can't delete recipe with id %d. Id not found.", id)
+                        String.format(RECIPE_NOT_FOUND, id)
                 )
         );
-
-        log.info("RecipeService deleteRecipeById: done deleting recipe with id {}.", id);
         recipeRepository.deleteById(id);
+        log.info(DELETE_RECIPE + "done deleting recipe.", id);
     }
 
     @Override
@@ -120,10 +124,12 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void validateAddRecipe(Recipe recipe){
+        log.info(VALIDATE_RECIPE_IF_EXIST, recipe.getName());
+        //TODO Use Predicate negate
         Optional<Recipe> recipeOptional = recipeRepository.findByName(recipe.getName());
         if(recipeOptional.isPresent()){
             throw new RecipeAlreadyExistException(
-                    String.format("Recipe %s already exist.", recipe.getName()));
+                    String.format(RECIPE_ALREADY_EXIST, recipe.getName()));
         }
         validateRecipeCategory(recipe.getCategory());
         validateTimeUnits(recipe.getCook_time_unit(), recipe.getPrep_time_unit());
@@ -131,11 +137,10 @@ public class RecipeServiceImpl implements RecipeService {
 
     private void validateTimeUnits(String... unitOfTime){
         List<String> chronoUnits = Arrays.stream(ChronoUnit.values()).map(Enum::name).toList();
-
         boolean invalidUnitOfTime = Arrays.stream(unitOfTime)
                 .anyMatch(unit -> Strings.isBlank(unit) || !chronoUnits.contains(unit.toUpperCase()));
 
-        if(invalidUnitOfTime) throw new InvalidRecipeException("Preparation or Cooking time is not accepted.");
+        if(invalidUnitOfTime) throw new InvalidRecipeException(INVALID_PREP_COOK_TIME);
     }
 
     private void validateRecipeCategory(String categoryName) {
@@ -143,20 +148,21 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private Set<Ingredient> mapIngredients(Recipe recipe){
+        log.info(RECIPE_VALUES_MAPPING, "ingredients", recipe.getName());
         return ingredientService.mapRecipeToIngredient(recipe);
     }
     private Set<Nutrition> mapNutritionValues(Recipe recipe){
+        log.info(RECIPE_VALUES_MAPPING, "nutrition facts", recipe.getName());
         return nutritionService.mapRecipeToNutrient(recipe);
     }
     private Set<Instruction> mapInstructions(Recipe recipe){
+        log.info(RECIPE_VALUES_MAPPING, "instructions", recipe.getName());
         return instructionService.mapInstructionToRecipe(recipe);
     }
 
     private int convertStringToInt(String str){
-        log.info("Validating search filter serving [{}]", str);
         if(testIfValidInt().test(str)){
-            log.info("Validating search filter serving [{}] failed", str);
-            throw new RecipeSearchException(String.format("filter serving is passed but has invalid value of %s", str));
+            throw new RecipeSearchException(String.format(INVALID_SEARCH_FILTER_SERVING, str));
         }
         return Strings.isBlank(str) ? 0 : Integer.parseInt(str);
     }

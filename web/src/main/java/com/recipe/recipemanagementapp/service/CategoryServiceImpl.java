@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.recipe.recipemanagementapp.constants.ErrorMessageConstants.CATEGORY_ALREADY_EXIST;
+import static com.recipe.recipemanagementapp.constants.ErrorMessageConstants.CATEGORY_NOT_FOUND;
+import static com.recipe.recipemanagementapp.constants.MessageConstants.VALIDATE_CATEGORY;
+
 @Service
 @Slf4j
 public class CategoryServiceImpl implements CategoryService {
@@ -43,17 +47,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void validateCategory(String categoryName) {
+        //TODO use Predicate negate
+        log.info(VALIDATE_CATEGORY, categoryName);
         if(categoryRepository.findByName(categoryName).isEmpty()){
             throw new InvalidRecipeCategoryException(
-                    String.format("Category %s not found", categoryName));
+                    String.format(CATEGORY_NOT_FOUND, categoryName));
         }
     }
 
     private void validateAddCategory(Category category){
+        //TODO use Predicate negate
+        log.info(VALIDATE_CATEGORY, category.getName());
         var optionalCategory = categoryRepository.findByName(category.getName());
         if(optionalCategory.isPresent()){
             throw new CategoryAlreadyExistException(
-                    String.format("Recipe Category %s already exist. ", category.getName())
+                    String.format(CATEGORY_ALREADY_EXIST, category.getName())
             );
         }
     }

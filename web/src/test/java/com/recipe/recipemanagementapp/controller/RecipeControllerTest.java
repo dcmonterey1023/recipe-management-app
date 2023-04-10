@@ -11,6 +11,7 @@ import com.recipe.recipemanagementapp.exception.RecipeAppAdvice;
 import com.recipe.recipemanagementapp.exception.RecipeNotFoundException;
 import com.recipe.recipemanagementapp.service.RecipeService;
 import com.recipe.recipemanagementapp.testdatafactory.RecipeTestDataFactory;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(RecipeController.class)
+@RequiredArgsConstructor
 class RecipeControllerTest {
     @Autowired
     MockMvc mvc;
@@ -50,7 +52,7 @@ class RecipeControllerTest {
     @Test
     void getRecipe() throws Exception {
         RecipeResponse recipeResponse = RecipeTestDataFactory.getRecipeResponse();
-        when(recipeService.getAllRecipe()).thenReturn(recipeResponse);
+        when(recipeService.getAllRecipes()).thenReturn(recipeResponse);
         this.mvc
                 .perform(get("/recipe"))
                 .andExpect(status().isOk())
@@ -60,7 +62,7 @@ class RecipeControllerTest {
     }
     @Test
     void getRecipeNoRecord() throws Exception {
-        when(recipeService.getAllRecipe()).thenReturn(new RecipeResponse());
+        when(recipeService.getAllRecipes()).thenReturn(new RecipeResponse());
         this.mvc
                 .perform(get("/recipe"))
                 .andExpect(status().isOk())

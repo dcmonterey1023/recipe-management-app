@@ -14,7 +14,6 @@ public class NutritionServiceImpl implements NutritionService {
 
     @Override
     public Set<Nutrition> mapRecipeToNutrient(Recipe recipe) {
-
         return recipe.getNutritions()
                 .stream()
                 .map(nutrition -> {
