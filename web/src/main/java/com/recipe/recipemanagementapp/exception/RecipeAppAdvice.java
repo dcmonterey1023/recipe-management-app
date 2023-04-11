@@ -29,30 +29,6 @@ public class RecipeAppAdvice {
         );
     }
 
-    @ExceptionHandler(CategoryAlreadyExistException.class)
-    public ResponseEntity<RecipeAppErrorResponse> handle(CategoryAlreadyExistException exception){
-        return new ResponseEntity<>(
-          createErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.value(), null),
-          HttpStatus.BAD_REQUEST
-        );
-    }
-
-    @ExceptionHandler(InvalidRecipeCategoryException.class)
-    public ResponseEntity<RecipeAppErrorResponse> handle(InvalidRecipeCategoryException exception){
-        return new ResponseEntity<>(
-                createErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.value(), null),
-                HttpStatus.BAD_REQUEST
-        );
-    }
-
-    @ExceptionHandler(UnitOfMeasureNotValidException.class)
-    public ResponseEntity<RecipeAppErrorResponse> handle(UnitOfMeasureNotValidException exception){
-        return new ResponseEntity<>(
-                createErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.value(),null),
-                HttpStatus.BAD_REQUEST
-        );
-    }
-
     @ExceptionHandler(RecipeSearchException.class)
     public ResponseEntity<RecipeAppErrorResponse> handle(RecipeSearchException exception){
         return new ResponseEntity<>(
@@ -63,14 +39,6 @@ public class RecipeAppAdvice {
 
     @ExceptionHandler(IngredientAlreadyExistException.class)
     public ResponseEntity<RecipeAppErrorResponse> handle(IngredientAlreadyExistException exception){
-        return new ResponseEntity<>(
-                createErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.value(), null),
-                HttpStatus.BAD_REQUEST
-        );
-    }
-
-    @ExceptionHandler(InvalidRecipeException.class)
-    public ResponseEntity<RecipeAppErrorResponse> handle(InvalidRecipeException exception){
         return new ResponseEntity<>(
                 createErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.value(), null),
                 HttpStatus.BAD_REQUEST
@@ -98,6 +66,14 @@ public class RecipeAppAdvice {
                 createErrorResponse("ConstraintViolationException encountered.", HttpStatus.BAD_REQUEST.value(), validationErrors),
                 HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<RecipeAppErrorResponse> handle(Exception exception){
+        return new ResponseEntity<>(
+                createErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST.value(), null),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
 
     private RecipeAppErrorResponse createErrorResponse(String message, int code, Map<String, String> map){
         return RecipeAppErrorResponse.builder()

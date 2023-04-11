@@ -1,5 +1,6 @@
 package com.recipe.recipemanagementapp.repository;
 
+import com.recipe.recipemanagementapp.constants.Categories;
 import com.recipe.recipemanagementapp.entity.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,15 +14,15 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("""
             select recipe from Recipe recipe
             where (:category is null or recipe.category = :category)
-            and (:serving < 1 or recipe.serving = :serving)
+            and (:serving is null or recipe.serving = :serving)
             and (:instruction is null or recipe.id in (select ins.recipe from Instruction ins where instruction like %:instruction%))
             and (:include is null or recipe.id in (select ing.recipe from Ingredient ing where name like %:include%))
-            and recipe.id not in (select ing.recipe from Ingredient ing where name like %:exclude%)
+            and (:exclude is null or recipe.id not in (select ing.recipe from Ingredient ing where name like %:exclude%))
             """)
-    public List<Recipe> findAllRecipeWithFilter(String category,
+    public List<Recipe> findAllRecipeWithFilter(Categories category,
                                                 String instruction,
                                                 String include,
                                                 String exclude,
-                                                int serving);
+                                                Integer serving);
 
 }

@@ -1,12 +1,14 @@
 package com.recipe.recipemanagementapp.service;
 
+import com.recipe.recipemanagementapp.constants.Categories;
+import com.recipe.recipemanagementapp.dto.RecipeDto;
 import com.recipe.recipemanagementapp.dto.RecipeResponse;
 import com.recipe.recipemanagementapp.dto.RecipeSearchRequest;
 import com.recipe.recipemanagementapp.entity.Recipe;
-import com.recipe.recipemanagementapp.exception.InvalidRecipeException;
 import com.recipe.recipemanagementapp.exception.RecipeAlreadyExistException;
 import com.recipe.recipemanagementapp.exception.RecipeNotFoundException;
 import com.recipe.recipemanagementapp.exception.RecipeSearchException;
+import com.recipe.recipemanagementapp.mapper.RecipeMapper;
 import com.recipe.recipemanagementapp.repository.RecipeRepository;
 import com.recipe.recipemanagementapp.testdatafactory.RecipeTestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,172 +23,146 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.recipe.recipemanagementapp.testdatafactory.RecipeTestDataFactory.getInvalidServingFilter;
 import static com.recipe.recipemanagementapp.testdatafactory.RecipeTestDataFactory.getRecipeSearchRequest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RecipeServiceImplTest {
-    RecipeService recipeService;
+    private RecipeService recipeService;
     @Mock
-    CategoryService categoryService;
+    private IngredientService ingredientService;
     @Mock
-    IngredientService ingredientService;
+    private NutritionService nutritionService;
     @Mock
-    NutritionService nutritionService;
+    private InstructionService instructionService;
     @Mock
-    InstructionService instructionService;
+    private RecipeRepository recipeRepository;
     @Mock
-    RecipeRepository recipeRepository;
+    private RecipeMapper mapper;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         recipeService = new RecipeServiceImpl(
                 recipeRepository,
-                categoryService,
                 ingredientService,
                 nutritionService,
-                instructionService);
-    }
-
-    @Test
-    @DisplayName("Get All Recipe returns size 1")
-    void getAllRecipes() {
-        //given
-        RecipeResponse recipe = RecipeTestDataFactory.getRecipeResponse();
-        //when
-        when(recipeRepository.findAll()).thenReturn(recipe.recipes());
-        RecipeResponse response = recipeService.getAllRecipes();
-        //then
-        assertAll(
-                () -> assertEquals(response.recipes().size(), 1),
-                () -> assertEquals(response.recipes().get(0).getName(), "Pinoy Adobo"),
-                () -> assertEquals(response.recipes().size(), 1),
-                () -> verify(recipeRepository, times(1)).findAll()
-        );
-    }
-
-    @Test
-    @DisplayName("Get All Recipe no record returns size 0")
-    void getAllRecipeNoRecord() {
-        //given
-        RecipeResponse recipe = new RecipeResponse();
-        //when
-        when(recipeRepository.findAll()).thenReturn(new ArrayList<>());
-        RecipeResponse response = recipeService.getAllRecipes();
-        //then
-        assertAll(
-                () -> assertEquals(response.recipes().size(), 0),
-                () -> assertEquals(response.count(), 0),
-                () -> verify(recipeRepository, times(1)).findAll()
-        );
+                instructionService,
+                mapper);
     }
 
     @Test
     @DisplayName("Get Recipe By Id 1 returns recipe")
-    void getRecipeByIdReturnSuccessful() {
+    void getRecipeById_successful() {
         //given
-        Recipe recipe = RecipeTestDataFactory.getRecipeTestData();
+        RecipeDto recipeDto = RecipeTestDataFactory.createRecipeDtoTestData();
+        Recipe recipeEntity = RecipeTestDataFactory.createRecipeEntityResponseTestData();
         //when
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(recipe));
-        Recipe response = recipeService.getRecipeById(1);
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(recipeEntity));
+        when(mapper.mapRecipeToRecipeDto(recipeEntity)).thenReturn(recipeDto);
+        RecipeDto response = recipeService.getRecipeById(1);
         //then
-        assertEquals(response.getName(), "Pinoy Adobo");
+        assertEquals("Pinoy Adobo", response.getName());
         verify(recipeRepository, times(1)).findById(anyLong());
+        verify(mapper, times(1)).mapRecipeToRecipeDto(recipeEntity);
     }
 
     @Test
     @DisplayName("Get Recipe by Id using non-existing Id throws exception")
-    void getRecipeByIdNotFound() {
+    void getRecipeById_recipe_not_found() {
         //when
         when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
         //then
         assertThrows(RecipeNotFoundException.class, ()-> recipeService.getRecipeById(anyLong()));
         verify(recipeRepository, times(1)).findById(anyLong());
+        verify(mapper, times(0)).mapRecipeToRecipeDto(any(Recipe.class));
     }
 
     @Test
-    void searchRecipe() {
+    void searchRecipe_successful() {
         //given
-        RecipeResponse recipeResponse = RecipeTestDataFactory.getRecipeResponse();
         RecipeSearchRequest recipeSearchRequest = getRecipeSearchRequest();
+        Recipe recipeEntity = RecipeTestDataFactory.createRecipeEntityResponseTestData();
+        RecipeDto recipeDto = RecipeTestDataFactory.createRecipeTestData();
+        //TODO
+        List<Recipe> recipes = List.of(recipeEntity);
         //when
-        when(recipeRepository.findAllRecipeWithFilter(anyString(),
-                anyString(), anyString(), anyString(), anyInt())).thenReturn(recipeResponse.recipes());
-        RecipeResponse response = recipeService.searchRecipe(recipeSearchRequest);
+        when(recipeRepository.findAllRecipeWithFilter(any(Categories.class),
+                anyString(), anyString(), anyString(), anyInt())).thenReturn(recipes);
+        when(mapper.mapRecipeToRecipeDto(recipeEntity)).thenReturn(recipeDto);
+        RecipeResponse response = recipeService.searchRecipes(recipeSearchRequest);
         //then
         assertAll(
-                () -> assertEquals(response.recipes().size(), 1),
-                () -> assertEquals(response.recipes().get(0).getName(), "Pinoy Adobo"),
-                () -> assertEquals(response.count(), 1),
-                () -> verify(recipeRepository, times(1)).findAllRecipeWithFilter(anyString(),
-                        anyString(), anyString(), anyString(), anyInt())
+                () -> assertEquals(1, response.recipes().size()),
+                () -> assertEquals("Pinoy Adobo", response.recipes().get(0).getName()),
+                () -> assertEquals(1, response.count()),
+                () -> verify(recipeRepository, times(1)).findAllRecipeWithFilter(
+                        any(Categories.class),anyString(), anyString(), anyString(), anyInt()),
+                () -> verify(mapper, times(1)).mapRecipeToRecipeDto(recipeEntity)
         );
     }
 
     @Test
-    void searchRecipeWithInvalidServing() {
+    void searchRecipe_no_record_found() {
         //given
-        RecipeSearchRequest recipeSearchRequest = getInvalidServingFilter();
+        RecipeSearchRequest recipeSearchRequest = getRecipeSearchRequest();
+        Recipe recipeEntity = RecipeTestDataFactory.createRecipeEntityResponseTestData();
+        RecipeDto recipeDto = RecipeTestDataFactory.createRecipeTestData();
+        //TODO
+        List<Recipe> recipes = List.of(recipeEntity);
         //when
+        when(recipeRepository.findAllRecipeWithFilter(any(Categories.class),
+                anyString(), anyString(), anyString(), anyInt())).thenReturn(new ArrayList<>());
+        RecipeResponse response = recipeService.searchRecipes(recipeSearchRequest);
         //then
-        assertThrows(RecipeSearchException.class, () -> recipeService.searchRecipe(recipeSearchRequest));
-        verify(recipeRepository, times(0)).findAllRecipeWithFilter(anyString(),
-                        anyString(), anyString(), anyString(), anyInt());
+        assertAll(
+                () -> assertEquals(0, response.recipes().size()),
+                () -> assertEquals(0, response.count()),
+                () -> verify(recipeRepository, times(1)).findAllRecipeWithFilter(
+                        any(Categories.class),anyString(), anyString(), anyString(), anyInt()),
+                () -> verify(mapper, times(0)).mapRecipeToRecipeDto(recipeEntity)
+        );
     }
 
     @Test
-    void createRecipe() {
+    void createRecipe_successful() {
         //given
-        Recipe recipe = RecipeTestDataFactory.getRecipeTestData();
+        RecipeDto recipeDto = RecipeTestDataFactory.createRecipeDtoTestData();
+        Recipe recipeEntity = RecipeTestDataFactory.createRecipeEntityResponseTestData();
         //when
-        when(recipeRepository.save(any())).thenReturn(recipe);
-        recipeService.createRecipe(recipe);
+        when(recipeRepository.save(recipeEntity)).thenReturn(recipeEntity);
+        when(mapper.mapRecipeDtoToRecipe(recipeDto)).thenReturn(recipeEntity);
+        when(mapper.mapRecipeToRecipeDto(recipeEntity)).thenReturn(recipeDto);
+        RecipeDto recipeDtoResponse = recipeService.createRecipe(recipeDto);
         //then
+        assertEquals("Pinoy Adobo", recipeDtoResponse.getName());
         verify(recipeRepository, times(1)).findByName(anyString());
-        verify(recipeRepository, times(1)).save(recipe);
+        verify(recipeRepository, times(1)).save(recipeEntity);
+        verify(mapper, times(1)).mapRecipeDtoToRecipe(any(RecipeDto.class));
+        verify(mapper, times(1)).mapRecipeToRecipeDto(any(Recipe.class));
     }
 
     @Test
-    void createRecipeInvalidUnitOfTime() {
+    void createRecipe_recipe_already_exist() {
         //given
-        Recipe recipe = RecipeTestDataFactory.getRecipeTestData();
-        recipe.setCook_time_unit("hour");
+        RecipeDto recipeDto = RecipeTestDataFactory.createRecipeDtoTestData();
+        Recipe recipeEntity = RecipeTestDataFactory.createRecipeEntityResponseTestData();
+        when(recipeRepository.findByName(anyString())).thenReturn(Optional.of(recipeEntity));
         //then
-        verify(recipeRepository, times(0)).findById(1L);
-        verify(recipeRepository, times(0)).save(recipe);
-        assertThrows(InvalidRecipeException.class, () -> recipeService.createRecipe(recipe));
-    }
-
-    @Test
-    void createRecipeAlreadyExist() {
-        //given
-        Recipe recipe = RecipeTestDataFactory.getRecipeTestData();
-        when(recipeRepository.findByName(anyString())).thenReturn(Optional.of(recipe));
-        //then
-        assertThrows(RecipeAlreadyExistException.class, () -> recipeService.createRecipe(recipe));
+        assertThrows(RecipeAlreadyExistException.class, () -> recipeService.createRecipe(recipeDto));
         verify(recipeRepository, times(1)).findByName(anyString());
-        verify(recipeRepository, times(0)).save(recipe);
+        verify(recipeRepository, times(0)).save(recipeEntity);
+        verify(mapper, times(0)).mapRecipeDtoToRecipe(any(RecipeDto.class));
+        verify(mapper, times(0)).mapRecipeToRecipeDto(any(Recipe.class));
     }
-
     @Test
-    void createRecipes() {
-        //given
-        List<Recipe> recipes = List.of(RecipeTestDataFactory.getRecipeTestData());
-        //when
-        when(recipeRepository.saveAll(any())).thenReturn(recipes);
-        recipeService.createRecipes(recipes);
-        //then
-        verify(recipeRepository, times(1)).saveAll(recipes);
-    }
-
-    @Test
-    void deleteRecipeById() {
+    void deleteRecipeById_successful() {
         //given an existing recipe with Id 1
-        Recipe recipe = RecipeTestDataFactory.getRecipeTestData();
+        RecipeDto recipeDto = RecipeTestDataFactory.createRecipeDtoTestData();
+        //TODO
+        Recipe recipeEntity = new Recipe();
         //when
-        when(recipeRepository.findById(1L)).thenReturn(Optional.of(recipe));
+        when(recipeRepository.findById(1L)).thenReturn(Optional.of(recipeEntity));
         recipeService.deleteRecipeById(1L);
         //then
         verify(recipeRepository, times(1)).findById(1L);
@@ -194,7 +170,7 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    void deleteRecipeByIdNoRecord() {
+    void deleteRecipeById_recipe_not_found() {
         //given
         //when
         when(recipeRepository.findById(1L)).thenReturn(Optional.empty());
@@ -206,31 +182,37 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    void updateRecipeById() {
+    void updateRecipeById_successful() {
         //given
-        Recipe recipe = RecipeTestDataFactory.getRecipeTestData();
-        Recipe updatedRecipe = RecipeTestDataFactory.getRecipeTestData();
-        updatedRecipe.setDescription("description updated");
+        RecipeDto recipeDto = RecipeTestDataFactory.createRecipeDtoTestData();
+        Recipe recipeEntity = RecipeTestDataFactory.createRecipeEntityResponseTestData();
+        recipeDto.setDescription("description updated");
         //when
-        when(recipeRepository.findById(1L)).thenReturn(Optional.of(recipe));
-        when(recipeRepository.save(updatedRecipe)).thenReturn(updatedRecipe);
-        recipeService.updateRecipeById(updatedRecipe, 1L);
+        when(recipeRepository.findById(1L)).thenReturn(Optional.of(recipeEntity));
+        when(recipeRepository.save(recipeEntity)).thenReturn(recipeEntity);
+        when(mapper.mapRecipeDtoToRecipe(recipeDto)).thenReturn(recipeEntity);
+        when(mapper.mapRecipeToRecipeDto(recipeEntity)).thenReturn(recipeDto);
+        RecipeDto recipeDtoResponse = recipeService.updateRecipeById(recipeDto, 1L);
         //then
-        assertNotEquals(recipe.getDescription(), updatedRecipe.getDescription());
+        assertNotEquals(recipeDtoResponse.getDescription(), recipeEntity.getDescription());
         verify(recipeRepository, times(1)).findById(1L);
-        verify(recipeRepository, times(1)).save(updatedRecipe);
+        verify(recipeRepository, times(1)).save(recipeEntity);
+        verify(mapper, times(1)).mapRecipeDtoToRecipe(recipeDto);
+        verify(mapper, times(1)).mapRecipeToRecipeDto(recipeEntity);
     }
 
     @Test
-    void updateRecipeByIdNoRecord() {
+    void updateRecipeById_no_record_found() {
         //given
-        Recipe updatedRecipe = RecipeTestDataFactory.getRecipeTestData();
-        updatedRecipe.setDescription("description updated");
+        RecipeDto recipeDto = RecipeTestDataFactory.createRecipeDtoTestData();
+        recipeDto.setDescription("description updated");
         //when
         when(recipeRepository.findById(1L)).thenReturn(Optional.empty());
         //then
-        assertThrows(RecipeNotFoundException.class, () -> recipeService.updateRecipeById(updatedRecipe, 1L));
+        assertThrows(RecipeNotFoundException.class, () -> recipeService.updateRecipeById(recipeDto, 1L));
         verify(recipeRepository, times(1)).findById(1L);
-        verify(recipeRepository, times(0)).save(updatedRecipe);
+        verify(recipeRepository, times(0)).save(any(Recipe.class));
+        verify(mapper, times(0)).mapRecipeDtoToRecipe(recipeDto);
+        verify(mapper, times(0)).mapRecipeToRecipeDto(any(Recipe.class));
     }
 }

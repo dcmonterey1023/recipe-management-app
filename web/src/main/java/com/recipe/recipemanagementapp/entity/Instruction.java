@@ -18,12 +18,10 @@ public class Instruction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Min(1)
-    private int step_order;
-    @Size(max = 1024)
+    private int stepOrder;
+    @Column(length = 1024)
     private String instruction;
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
     private Recipe recipe;
 
 }
