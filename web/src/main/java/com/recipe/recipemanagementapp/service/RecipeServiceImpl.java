@@ -85,7 +85,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public void deleteRecipeById(long id) {
-        //TODO use Predicate negate
         log.info(DELETE_RECIPE + "check if recipe exist", id);
         recipeRepository.findById(id).orElseThrow(
                 () -> new RecipeNotFoundException(
@@ -116,7 +115,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     private void validateAddRecipe(RecipeDto recipe){
         log.info(VALIDATE_RECIPE_IF_EXIST, recipe.getName());
-        //TODO Use Predicate negate
         Optional<Recipe> recipeOptional = recipeRepository.findByName(recipe.getName());
         if(recipeOptional.isPresent()){
             throw new RecipeAlreadyExistException(

@@ -1,0 +1,303 @@
+{
+	"info": {
+		"_postman_id": "0cc13ad8-e3e1-4d7a-b502-2c9165bb91b7",
+		"name": "Recipe Management App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7179378"
+	},
+	"item": [
+		{
+			"name": "recipe",
+			"item": [
+				{
+					"name": "Create Recipe Successful",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Pinoy Pork Adobo\",\r\n    \"description\": \"It is a dish composed of pork slices cooked in soy sauce, vinegar, and garlic.\",\r\n    \"instructions\": [\r\n        {\r\n            \"stepOrder\": 1,\r\n            \"instruction\": \"Combine the pork belly, soy sauce, and garlic then marinade for at least 1 hour.\"\r\n        },\r\n        {\r\n            \"stepOrder\": 2,\r\n            \"instruction\": \"Heat the pot and put-in the marinated pork belly then cook for a few minutes.\"\r\n        },\r\n        {\r\n            \"stepOrder\": 3,\r\n            \"instruction\": \"Pour remaining marinade including garlic.\"\r\n        },\r\n        {\r\n            \"stepOrder\": 4,\r\n            \"instruction\": \"Add water, whole pepper corn, and dried bay leaves then bring to a boil. Simmer for 40 minutes to 1 hour.\"\r\n        },\r\n        {\r\n            \"stepOrder\": 5,\r\n            \"instruction\": \"Put-in the vinegar and simmer for 12 to 15 minutes.\"\r\n        },\r\n        {\r\n            \"stepOrder\": 6,\r\n            \"instruction\": \"Add salt to taste.\"\r\n        }\r\n        ,\r\n        {\r\n            \"stepOrder\": 7,\r\n            \"instruction\": \"Serve hot. Share and enjoy!\"\r\n        }\r\n    ],\r\n    \"category\": \"KETO\",\r\n    \"cuisine\": \"AMERICAN\",\r\n    \"ingredients\": [\r\n        {\"name\": \"pork belly\",\"unitOfMeasure\": \"LBS\",\"amount\": 2.0},\r\n        {\"name\": \"garlic\",\"unitOfMeasure\": \"TABLESPOON\",\"amount\": 2.0},\r\n        {\"name\": \"dried bay leaves\",\"unitOfMeasure\": \"PC\",\"amount\": 5.0},\r\n        {\"name\": \"vinegar\",\"unitOfMeasure\": \"LITER\",\"amount\": 4.0},\r\n        {\"name\": \"soy sauce\",\"unitOfMeasure\": \"GALLON\",\"amount\": 0.5},\r\n        {\"name\": \"peppecorn\",\"unitOfMeasure\": \"LBS\",\"amount\": 1.0},\r\n        {\"name\": \"water\",\"unitOfMeasure\": \"CUP\",\"amount\": 2.0},\r\n        {\"name\": \"salt\",\"unitOfMeasure\": \"TABLESPOON\",\"amount\": 0.5}\r\n    ],\r\n    \"prepTime\": 10,\r\n    \"prepTimeUnit\": \"MINUTES\",\r\n    \"cookTime\": 1,\r\n    \"cookTimeUnit\": \"HOURS\",\r\n    \"serving\": 4,\r\n    \"nutritions\": [\r\n        {\"name\": \"Calories\",\"percent\": 0.61},\r\n        {\"name\": \"Carbohydrates\",\"percent\": 0.02},\r\n        {\"name\": \"Protein\",\"percent\": 0.48},\r\n        {\"name\": \"Fat\",\"percent\": 1.85},\r\n        {\"name\": \"Saturated Fat\",\"percent\": 2.15},\r\n        {\"name\": \"Cholesterol\",\"percent\": 0.54},\r\n        {\"name\": \"Sodium\",\"percent\": 0.71},\r\n        {\"name\": \"Potassium\",\"percent\": 0.15},\r\n        {\"name\": \"Fiber\",\"percent\": 0.04},\r\n        {\"name\": \"Vitamin A\",\"percent\": 0.02},\r\n        {\"name\": \"Vitamin C\",\"percent\": 0.03},\r\n        {\"name\": \"Calcium\",\"percent\": 0.05},\r\n        {\"name\": \"Iron\",\"percent\": 0.15}\r\n    ],\r\n    \"notes\": \"Pork belly is the most common cut of pork to use for adobo, but you can also use other cuts as long as it has some fat content. Fat makes the meat moist. \\nI suggest using pork shoulder as an alternative cut Filipino adobo won’t be the same without garlic. The more garlic I use, the better my adobo is (in my opinion). \\nCrush the garlic using a mortar and pestle tool or the side of your knife before cooking. This ensures that the flavors are quickly extracted from it. Bay leaves or Laurel leaves is a must for this recipe. Dried bay leaves are the most commonly used due to its availability. Fresh bay leaves is good too. Use white vinegar. If this is not available, either cane or rice vinegar can be used as substitutes. \\nI use Filipino brand soy sauce all the time. In my opinion, using other kinds of soy sauce affects the authentic flavor of the dish. \\nWhole peppercorns are ideal. However, you can use cracked pepper or ground pepper for this recipe.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Recipe Recipe Already Exist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Pinoy Pork Adobo\",\r\n    \"description\": \"It is a dish composed of pork slices cooked in soy sauce, vinegar, and garlic.\",\r\n    \"instructions\": [\r\n        {\r\n            \"stepOrder\": 1,\r\n            \"instruction\": \"Combine the pork belly, soy sauce, and garlic then marinade for at least 1 hour.\"\r\n        },\r\n        {\r\n            \"stepOrder\": 2,\r\n            \"instruction\": \"Heat the pot and put-in the marinated pork belly then cook for a few minutes.\"\r\n        },\r\n        {\r\n            \"stepOrder\": 3,\r\n            \"instruction\": \"Pour remaining marinade including garlic.\"\r\n        },\r\n        {\r\n            \"stepOrder\": 4,\r\n            \"instruction\": \"Add water, whole pepper corn, and dried bay leaves then bring to a boil. Simmer for 40 minutes to 1 hour.\"\r\n        },\r\n        {\r\n            \"stepOrder\": 5,\r\n            \"instruction\": \"Put-in the vinegar and simmer for 12 to 15 minutes.\"\r\n        },\r\n        {\r\n            \"stepOrder\": 6,\r\n            \"instruction\": \"Add salt to taste.\"\r\n        }\r\n        ,\r\n        {\r\n            \"stepOrder\": 7,\r\n            \"instruction\": \"Serve hot. Share and enjoy!\"\r\n        }\r\n    ],\r\n    \"category\": \"KETO\",\r\n    \"cuisine\": \"AMERICAN\",\r\n    \"ingredients\": [\r\n        {\"name\": \"pork belly\",\"unitOfMeasure\": \"LBS\",\"amount\": 2.0},\r\n        {\"name\": \"garlic\",\"unitOfMeasure\": \"TABLESPOON\",\"amount\": 2.0},\r\n        {\"name\": \"dried bay leaves\",\"unitOfMeasure\": \"PC\",\"amount\": 5.0},\r\n        {\"name\": \"vinegar\",\"unitOfMeasure\": \"LITER\",\"amount\": 4.0},\r\n        {\"name\": \"soy sauce\",\"unitOfMeasure\": \"GALLON\",\"amount\": 0.5},\r\n        {\"name\": \"peppecorn\",\"unitOfMeasure\": \"LBS\",\"amount\": 1.0},\r\n        {\"name\": \"water\",\"unitOfMeasure\": \"CUP\",\"amount\": 2.0},\r\n        {\"name\": \"salt\",\"unitOfMeasure\": \"TABLESPOON\",\"amount\": 0.5}\r\n    ],\r\n    \"prepTime\": 10,\r\n    \"prepTimeUnit\": \"MINUTES\",\r\n    \"cookTime\": 1,\r\n    \"cookTimeUnit\": \"HOURS\",\r\n    \"serving\": 4,\r\n    \"nutritions\": [\r\n        {\"name\": \"Calories\",\"percent\": 0.61},\r\n        {\"name\": \"Carbohydrates\",\"percent\": 0.02},\r\n        {\"name\": \"Protein\",\"percent\": 0.48},\r\n        {\"name\": \"Fat\",\"percent\": 1.85},\r\n        {\"name\": \"Saturated Fat\",\"percent\": 2.15},\r\n        {\"name\": \"Cholesterol\",\"percent\": 0.54},\r\n        {\"name\": \"Sodium\",\"percent\": 0.71},\r\n        {\"name\": \"Potassium\",\"percent\": 0.15},\r\n        {\"name\": \"Fiber\",\"percent\": 0.04},\r\n        {\"name\": \"Vitamin A\",\"percent\": 0.02},\r\n        {\"name\": \"Vitamin C\",\"percent\": 0.03},\r\n        {\"name\": \"Calcium\",\"percent\": 0.05},\r\n        {\"name\": \"Iron\",\"percent\": 0.15}\r\n    ],\r\n    \"notes\": \"Pork belly is the most common cut of pork to use for adobo, but you can also use other cuts as long as it has some fat content. Fat makes the meat moist. \\nI suggest using pork shoulder as an alternative cut Filipino adobo won’t be the same without garlic. The more garlic I use, the better my adobo is (in my opinion). \\nCrush the garlic using a mortar and pestle tool or the side of your knife before cooking. This ensures that the flavors are quickly extracted from it. Bay leaves or Laurel leaves is a must for this recipe. Dried bay leaves are the most commonly used due to its availability. Fresh bay leaves is good too. Use white vinegar. If this is not available, either cane or rice vinegar can be used as substitutes. \\nI use Filipino brand soy sauce all the time. In my opinion, using other kinds of soy sauce affects the authentic flavor of the dish. \\nWhole peppercorns are ideal. However, you can use cracked pepper or ground pepper for this recipe.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Recipe Recipe Invalid Fields",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"description\": \"\",\r\n    \"instructions\": [],\r\n    \"category\": \"\",\r\n    \"cuisine\": \"\",\r\n    \"ingredients\": [],\r\n    \"prepTime\": 0,\r\n    \"prepTimeUnit\": \"\",\r\n    \"cookTime\": 0,\r\n    \"cookTimeUnit\": \"\",\r\n    \"serving\": 0,\r\n    \"nutritions\": [],\r\n    \"notes\": \"Pork belly is the most common cut of pork to use for adobo, but you can also use other cuts as long as it has some fat content. Fat makes the meat moist. \\nI suggest using pork shoulder as an alternative cut Filipino adobo won’t be the same without garlic. The more garlic I use, the better my adobo is (in my opinion). \\nCrush the garlic using a mortar and pestle tool or the side of your knife before cooking. This ensures that the flavors are quickly extracted from it. Bay leaves or Laurel leaves is a must for this recipe. Dried bay leaves are the most commonly used due to its availability. Fresh bay leaves is good too. Use white vinegar. If this is not available, either cane or rice vinegar can be used as substitutes. \\nI use Filipino brand soy sauce all the time. In my opinion, using other kinds of soy sauce affects the authentic flavor of the dish. \\nWhole peppercorns are ideal. However, you can use cracked pepper or ground pepper for this recipe. Pork belly is the most common cut of pork to use for adobo, but you can also use other cuts as long as it has some fat content. Fat makes the meat moist. \\nI suggest using pork shoulder as an alternative cut Filipino adobo won’t be the same without garlic. The more garlic I use, the better my adobo is (in my opinion). \\nCrush the garlic using a mortar and pestle tool or the side of your knife before cooking. This ensures that the flavors are quickly extracted from it. Bay leaves or Laurel leaves is a must for this recipe. Dried bay leaves are the most commonly used due to its availability. Fresh bay leaves is good too. Use white vinegar. If this is not available, either cane or rice vinegar can be used as substitutes. \\nI use Filipino brand soy sauce all the time. In my opinion, using other kinds of soy sauce affects the authentic flavor of the dish. \\nWhole peppercorns are ideal. However, you can use cracked pepper or ground pepper for this recipe.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Recipes using Search - with filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/recipes/search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Recipes using Search - with filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/recipes/search?category=KETO",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes",
+								"search"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "KETO"
+								},
+								{
+									"key": "serving",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "ingredientInclude",
+									"value": "garlic",
+									"disabled": true
+								},
+								{
+									"key": "ingredientExclude",
+									"value": "onion",
+									"disabled": true
+								},
+								{
+									"key": "instruction",
+									"value": "combine",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipe By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/recipes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipe By Id Recipe Not Found",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/recipes/100",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes",
+								"100"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Recipe By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/recipes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Recipe By Id Recipe Not Found",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/recipes/100",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes",
+								"100"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Recipe By Id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Pinoy Pork\",\r\n    \"description\": \"It composed of pork slices cooked in soy sauce, vinegar, and garlic.\",\r\n    \"category\": \"KETO\",\r\n    \"cuisine\": \"AMERICAN\",\r\n    \"serving\": 1,\r\n    \"prepTime\": 10,\r\n    \"prepTimeUnit\": \"MINUTES\",\r\n    \"cookTime\": 1,\r\n    \"cookTimeUnit\": \"HOURS\",\r\n    \"ingredients\": [\r\n        {\r\n            \"id\": 1,\r\n            \"name\": \"dried bay leaves\",\r\n            \"amount\": 5.0,\r\n            \"unitOfMeasure\": \"PC\"\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"name\": \"dried bay leaves\",\r\n            \"amount\": 5.0,\r\n            \"unitOfMeasure\": \"PC\"\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"name\": \"garlic\",\r\n            \"amount\": 2.0,\r\n            \"unitOfMeasure\": \"TABLESPOON\"\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"name\": \"pork belly\",\r\n            \"amount\": 2.0,\r\n            \"unitOfMeasure\": \"LBS\"\r\n        },\r\n        {\r\n            \"id\": 4,\r\n            \"name\": \"peppecorn\",\r\n            \"amount\": 1.0,\r\n            \"unitOfMeasure\": \"LBS\"\r\n        },\r\n        {\r\n            \"id\": 5,\r\n            \"name\": \"soy sauce\",\r\n            \"amount\": 0.5,\r\n            \"unitOfMeasure\": \"GALLON\"\r\n        },\r\n        {\r\n            \"id\": 6,\r\n            \"name\": \"salt\",\r\n            \"amount\": 0.5,\r\n            \"unitOfMeasure\": \"TABLESPOON\"\r\n        },\r\n        {\r\n            \"id\": 7,\r\n            \"name\": \"vinegar\",\r\n            \"amount\": 4.0,\r\n            \"unitOfMeasure\": \"LITER\"\r\n        },\r\n        {\r\n            \"id\": 8,\r\n            \"name\": \"water\",\r\n            \"amount\": 2.0,\r\n            \"unitOfMeasure\": \"CUP\"\r\n        }\r\n    ],\r\n    \"instructions\": [\r\n        {\r\n            \"id\": 1,\r\n            \"stepOrder\": 5,\r\n            \"instruction\": \"Put-in the vinegar and simmer for 12 to 15 minutes.\"\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"stepOrder\": 1,\r\n            \"instruction\": \"Combine the pork belly, soy sauce, and garlic then marinade for at least 1 hour.\"\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"stepOrder\": 4,\r\n            \"instruction\": \"Add water, whole pepper corn, and dried bay leaves then bring to a boil. Simmer for 40 minutes to 1 hour.\"\r\n        },\r\n        {\r\n            \"id\": 4,\r\n            \"stepOrder\": 2,\r\n            \"instruction\": \"Heat the pot and put-in the marinated pork belly then cook for a few minutes.\"\r\n        },\r\n        {\r\n            \"id\": 5,\r\n            \"stepOrder\": 6,\r\n            \"instruction\": \"Add salt to taste.\"\r\n        },\r\n        {\r\n            \"id\": 6,\r\n            \"stepOrder\": 3,\r\n            \"instruction\": \"Pour remaining marinade including garlic.\"\r\n        },\r\n        {\r\n            \"id\": 7,\r\n            \"stepOrder\": 7,\r\n            \"instruction\": \"Serve hot. Share and enjoy!\"\r\n        }\r\n    ],\r\n    \"nutritions\": [\r\n        {\r\n            \"id\": 1,\r\n            \"name\": \"Potassium\",\r\n            \"percent\": 0.15\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"name\": \"Sodium\",\r\n            \"percent\": 0.71\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"name\": \"Calories\",\r\n            \"percent\": 0.61\r\n        },\r\n        {\r\n            \"id\": 4,\r\n            \"name\": \"Protein\",\r\n            \"percent\": 0.48\r\n        },\r\n        {\r\n            \"id\": 5,\r\n            \"name\": \"Vitamin A\",\r\n            \"percent\": 0.02\r\n        },\r\n        {\r\n            \"id\": 6,\r\n            \"name\": \"Vitamin C\",\r\n            \"percent\": 0.03\r\n        },\r\n        {\r\n            \"id\": 7,\r\n            \"name\": \"Cholesterol\",\r\n            \"percent\": 0.54\r\n        },\r\n        {\r\n            \"id\": 8,\r\n            \"name\": \"Carbohydrates\",\r\n            \"percent\": 0.02\r\n        },\r\n        {\r\n            \"id\": 9,\r\n            \"name\": \"Fiber\",\r\n            \"percent\": 0.04\r\n        },\r\n        {\r\n            \"id\": 10,\r\n            \"name\": \"Calcium\",\r\n            \"percent\": 0.05\r\n        },\r\n        {\r\n            \"id\": 11,\r\n            \"name\": \"Fat\",\r\n            \"percent\": 1.85\r\n        },\r\n        {\r\n            \"id\": 12,\r\n            \"name\": \"Iron\",\r\n            \"percent\": 0.15\r\n        },\r\n        {\r\n            \"id\": 13,\r\n            \"name\": \"Saturated Fat\",\r\n            \"percent\": 2.15\r\n        }\r\n    ],\r\n    \"notes\": \"Pork belly is the most common cut of pork to use for adobo, but you can also use other cuts as long as it has some fat content. Fat makes the meat moist. \\nI suggest using pork shoulder as an alternative cut Filipino adobo won’t be the same without garlic. The more garlic I use, the better my adobo is (in my opinion). \\nCrush the garlic using a mortar and pestle tool or the side of your knife before cooking. This ensures that the flavors are quickly extracted from it. Bay leaves or Laurel leaves is a must for this recipe. Dried bay leaves are the most commonly used due to its availability. Fresh bay leaves is good too. Use white vinegar. If this is not available, either cane or rice vinegar can be used as substitutes. \\nI use Filipino brand soy sauce all the time. In my opinion, using other kinds of soy sauce affects the authentic flavor of the dish. \\nWhole peppercorns are ideal. However, you can use cracked pepper or ground pepper for this recipe.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/recipes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Recipe By Id Recipe Not Found",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Pinoy Pork Adobo\",\r\n    \"description\": \"It is a dish composed of pork slices cooked in soy sauce, vinegar, and garlic.\",\r\n    \"category\": \"KETO\",\r\n    \"cuisine\": \"AMERICAN\",\r\n    \"serving\": 1,\r\n    \"prepTime\": 10,\r\n    \"prepTimeUnit\": \"MINUTES\",\r\n    \"cookTime\": 1,\r\n    \"cookTimeUnit\": \"HOURS\",\r\n    \"ingredients\": [\r\n        {\r\n            \"id\": 1,\r\n            \"name\": \"dried bay leaves\",\r\n            \"amount\": 5.0,\r\n            \"unitOfMeasure\": \"PC\"\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"name\": \"dried bay leaves\",\r\n            \"amount\": 5.0,\r\n            \"unitOfMeasure\": \"PC\"\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"name\": \"garlic\",\r\n            \"amount\": 2.0,\r\n            \"unitOfMeasure\": \"TABLESPOON\"\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"name\": \"pork belly\",\r\n            \"amount\": 2.0,\r\n            \"unitOfMeasure\": \"LBS\"\r\n        },\r\n        {\r\n            \"id\": 4,\r\n            \"name\": \"peppecorn\",\r\n            \"amount\": 1.0,\r\n            \"unitOfMeasure\": \"LBS\"\r\n        },\r\n        {\r\n            \"id\": 5,\r\n            \"name\": \"soy sauce\",\r\n            \"amount\": 0.5,\r\n            \"unitOfMeasure\": \"GALLON\"\r\n        },\r\n        {\r\n            \"id\": 6,\r\n            \"name\": \"salt\",\r\n            \"amount\": 0.5,\r\n            \"unitOfMeasure\": \"TABLESPOON\"\r\n        },\r\n        {\r\n            \"id\": 7,\r\n            \"name\": \"vinegar\",\r\n            \"amount\": 4.0,\r\n            \"unitOfMeasure\": \"LITER\"\r\n        },\r\n        {\r\n            \"id\": 8,\r\n            \"name\": \"water\",\r\n            \"amount\": 2.0,\r\n            \"unitOfMeasure\": \"CUP\"\r\n        }\r\n    ],\r\n    \"instructions\": [\r\n        {\r\n            \"id\": 1,\r\n            \"stepOrder\": 5,\r\n            \"instruction\": \"Put-in the vinegar and simmer for 12 to 15 minutes.\"\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"stepOrder\": 1,\r\n            \"instruction\": \"Combine the pork belly, soy sauce, and garlic then marinade for at least 1 hour.\"\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"stepOrder\": 4,\r\n            \"instruction\": \"Add water, whole pepper corn, and dried bay leaves then bring to a boil. Simmer for 40 minutes to 1 hour.\"\r\n        },\r\n        {\r\n            \"id\": 4,\r\n            \"stepOrder\": 2,\r\n            \"instruction\": \"Heat the pot and put-in the marinated pork belly then cook for a few minutes.\"\r\n        },\r\n        {\r\n            \"id\": 5,\r\n            \"stepOrder\": 6,\r\n            \"instruction\": \"Add salt to taste.\"\r\n        },\r\n        {\r\n            \"id\": 6,\r\n            \"stepOrder\": 3,\r\n            \"instruction\": \"Pour remaining marinade including garlic.\"\r\n        },\r\n        {\r\n            \"id\": 7,\r\n            \"stepOrder\": 7,\r\n            \"instruction\": \"Serve hot. Share and enjoy!\"\r\n        }\r\n    ],\r\n    \"nutritions\": [\r\n        {\r\n            \"id\": 1,\r\n            \"name\": \"Potassium\",\r\n            \"percent\": 0.15\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"name\": \"Sodium\",\r\n            \"percent\": 0.71\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"name\": \"Calories\",\r\n            \"percent\": 0.61\r\n        },\r\n        {\r\n            \"id\": 4,\r\n            \"name\": \"Protein\",\r\n            \"percent\": 0.48\r\n        },\r\n        {\r\n            \"id\": 5,\r\n            \"name\": \"Vitamin A\",\r\n            \"percent\": 0.02\r\n        },\r\n        {\r\n            \"id\": 6,\r\n            \"name\": \"Vitamin C\",\r\n            \"percent\": 0.03\r\n        },\r\n        {\r\n            \"id\": 7,\r\n            \"name\": \"Cholesterol\",\r\n            \"percent\": 0.54\r\n        },\r\n        {\r\n            \"id\": 8,\r\n            \"name\": \"Carbohydrates\",\r\n            \"percent\": 0.02\r\n        },\r\n        {\r\n            \"id\": 9,\r\n            \"name\": \"Fiber\",\r\n            \"percent\": 0.04\r\n        },\r\n        {\r\n            \"id\": 10,\r\n            \"name\": \"Calcium\",\r\n            \"percent\": 0.05\r\n        },\r\n        {\r\n            \"id\": 11,\r\n            \"name\": \"Fat\",\r\n            \"percent\": 1.85\r\n        },\r\n        {\r\n            \"id\": 12,\r\n            \"name\": \"Iron\",\r\n            \"percent\": 0.15\r\n        },\r\n        {\r\n            \"id\": 13,\r\n            \"name\": \"Saturated Fat\",\r\n            \"percent\": 2.15\r\n        }\r\n    ],\r\n    \"notes\": \"Pork belly is the most common cut of pork to use for adobo, but you can also use other cuts as long as it has some fat content. Fat makes the meat moist. \\nI suggest using pork shoulder as an alternative cut Filipino adobo won’t be the same without garlic. The more garlic I use, the better my adobo is (in my opinion). \\nCrush the garlic using a mortar and pestle tool or the side of your knife before cooking. This ensures that the flavors are quickly extracted from it. Bay leaves or Laurel leaves is a must for this recipe. Dried bay leaves are the most commonly used due to its availability. Fresh bay leaves is good too. Use white vinegar. If this is not available, either cane or rice vinegar can be used as substitutes. \\nI use Filipino brand soy sauce all the time. In my opinion, using other kinds of soy sauce affects the authentic flavor of the dish. \\nWhole peppercorns are ideal. However, you can use cracked pepper or ground pepper for this recipe.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/recipes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
