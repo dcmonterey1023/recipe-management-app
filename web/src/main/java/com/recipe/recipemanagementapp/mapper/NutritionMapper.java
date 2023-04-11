@@ -8,6 +8,5 @@ import org.mapstruct.Mapper;
 public interface NutritionMapper {
 
     Nutrition mapNutritionDtoToNutrition(NutritionDto dto);
-    NutritionDto mapNutritionToNutrition(Nutrition nutrition);
 
 }

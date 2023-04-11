@@ -8,6 +8,5 @@ import org.mapstruct.Mapper;
 public interface InstructionMapper {
 
     Instruction mapInstructionDtoToInstruction(InstructionDto dto);
-    InstructionDto mapInstructionToInstructionDto(Instruction instruction);
 
 }

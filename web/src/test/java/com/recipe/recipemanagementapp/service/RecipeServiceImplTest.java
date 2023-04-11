@@ -7,7 +7,6 @@ import com.recipe.recipemanagementapp.dto.RecipeSearchRequest;
 import com.recipe.recipemanagementapp.entity.Recipe;
 import com.recipe.recipemanagementapp.exception.RecipeAlreadyExistException;
 import com.recipe.recipemanagementapp.exception.RecipeNotFoundException;
-import com.recipe.recipemanagementapp.exception.RecipeSearchException;
 import com.recipe.recipemanagementapp.mapper.RecipeMapper;
 import com.recipe.recipemanagementapp.repository.RecipeRepository;
 import com.recipe.recipemanagementapp.testdatafactory.RecipeTestDataFactory;
