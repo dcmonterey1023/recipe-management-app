@@ -1,6 +1,5 @@
 package com.recipe.recipemanagementapp.service;
 
-import com.recipe.recipemanagementapp.dto.NutritionDto;
 import com.recipe.recipemanagementapp.dto.RecipeDto;
 import com.recipe.recipemanagementapp.entity.Nutrition;
 import com.recipe.recipemanagementapp.entity.Recipe;

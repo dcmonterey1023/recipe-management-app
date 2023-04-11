@@ -2,7 +2,6 @@ package com.recipe.recipemanagementapp.service;
 
 import com.recipe.recipemanagementapp.dto.NutritionDto;
 import com.recipe.recipemanagementapp.dto.RecipeDto;
-import com.recipe.recipemanagementapp.entity.Instruction;
 import com.recipe.recipemanagementapp.entity.Nutrition;
 import com.recipe.recipemanagementapp.entity.Recipe;
 import com.recipe.recipemanagementapp.mapper.NutritionMapper;
@@ -15,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

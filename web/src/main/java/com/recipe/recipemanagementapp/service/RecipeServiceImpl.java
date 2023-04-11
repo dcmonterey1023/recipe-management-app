@@ -1,23 +1,27 @@
 package com.recipe.recipemanagementapp.service;
 
-import com.recipe.recipemanagementapp.dto.*;
+import com.recipe.recipemanagementapp.dto.RecipeDto;
+import com.recipe.recipemanagementapp.dto.RecipeResponse;
+import com.recipe.recipemanagementapp.dto.RecipeSearchRequest;
+import com.recipe.recipemanagementapp.entity.Ingredient;
 import com.recipe.recipemanagementapp.entity.Instruction;
 import com.recipe.recipemanagementapp.entity.Nutrition;
-import com.recipe.recipemanagementapp.exception.*;
-import com.recipe.recipemanagementapp.entity.Ingredient;
 import com.recipe.recipemanagementapp.entity.Recipe;
+import com.recipe.recipemanagementapp.exception.RecipeAlreadyExistException;
+import com.recipe.recipemanagementapp.exception.RecipeNotFoundException;
 import com.recipe.recipemanagementapp.mapper.RecipeMapper;
 import com.recipe.recipemanagementapp.repository.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import static com.recipe.recipemanagementapp.constants.ErrorMessageConstants.*;
+import static com.recipe.recipemanagementapp.constants.ErrorMessageConstants.RECIPE_ALREADY_EXIST;
+import static com.recipe.recipemanagementapp.constants.ErrorMessageConstants.RECIPE_NOT_FOUND;
 import static com.recipe.recipemanagementapp.constants.MessageConstants.*;
 
 @Service
@@ -81,7 +85,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public void deleteRecipeById(long id) {
-        //TODO use Predicate negate
         log.info(DELETE_RECIPE + "check if recipe exist", id);
         recipeRepository.findById(id).orElseThrow(
                 () -> new RecipeNotFoundException(
@@ -112,7 +115,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     private void validateAddRecipe(RecipeDto recipe){
         log.info(VALIDATE_RECIPE_IF_EXIST, recipe.getName());
-        //TODO Use Predicate negate
         Optional<Recipe> recipeOptional = recipeRepository.findByName(recipe.getName());
         if(recipeOptional.isPresent()){
             throw new RecipeAlreadyExistException(

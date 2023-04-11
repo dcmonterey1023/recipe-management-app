@@ -7,7 +7,6 @@ import com.recipe.recipemanagementapp.dto.RecipeSearchRequest;
 import com.recipe.recipemanagementapp.entity.Recipe;
 import com.recipe.recipemanagementapp.exception.RecipeAlreadyExistException;
 import com.recipe.recipemanagementapp.exception.RecipeNotFoundException;
-import com.recipe.recipemanagementapp.exception.RecipeSearchException;
 import com.recipe.recipemanagementapp.mapper.RecipeMapper;
 import com.recipe.recipemanagementapp.repository.RecipeRepository;
 import com.recipe.recipemanagementapp.testdatafactory.RecipeTestDataFactory;
@@ -84,7 +83,6 @@ class RecipeServiceImplTest {
         RecipeSearchRequest recipeSearchRequest = getRecipeSearchRequest();
         Recipe recipeEntity = RecipeTestDataFactory.createRecipeEntityResponseTestData();
         RecipeDto recipeDto = RecipeTestDataFactory.createRecipeTestData();
-        //TODO
         List<Recipe> recipes = List.of(recipeEntity);
         //when
         when(recipeRepository.findAllRecipeWithFilter(any(Categories.class),
@@ -108,7 +106,6 @@ class RecipeServiceImplTest {
         RecipeSearchRequest recipeSearchRequest = getRecipeSearchRequest();
         Recipe recipeEntity = RecipeTestDataFactory.createRecipeEntityResponseTestData();
         RecipeDto recipeDto = RecipeTestDataFactory.createRecipeTestData();
-        //TODO
         List<Recipe> recipes = List.of(recipeEntity);
         //when
         when(recipeRepository.findAllRecipeWithFilter(any(Categories.class),
@@ -157,9 +154,8 @@ class RecipeServiceImplTest {
     }
     @Test
     void deleteRecipeById_successful() {
-        //given an existing recipe with Id 1
+        //given
         RecipeDto recipeDto = RecipeTestDataFactory.createRecipeDtoTestData();
-        //TODO
         Recipe recipeEntity = new Recipe();
         //when
         when(recipeRepository.findById(1L)).thenReturn(Optional.of(recipeEntity));
