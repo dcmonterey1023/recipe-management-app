@@ -1,4 +1,10 @@
 # recipe-management-app
+Recipe Management App is a REST API that manages recipes of a use.
+The REST API is built with Spring boot 3 and Spring 6
+and using Java 17 as programming language.
+Since this is a relatively small application and is standalone,
+monolithic architecture is enough.
+It does not benefit from a microservices architecture since it has no known domain as of this writing.  
 
 # Dependencies
 - Java 17
