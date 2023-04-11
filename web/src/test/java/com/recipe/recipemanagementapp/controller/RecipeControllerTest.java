@@ -1,7 +1,11 @@
 package com.recipe.recipemanagementapp.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recipe.recipemanagementapp.RecipeManagementApp;
+import com.recipe.recipemanagementapp.constants.ErrorMessageConstants;
+import com.recipe.recipemanagementapp.constants.MessageConstants;
+import com.recipe.recipemanagementapp.dto.RecipeDto;
 import com.recipe.recipemanagementapp.dto.RecipeResponse;
 import com.recipe.recipemanagementapp.dto.RecipeSearchRequest;
 import com.recipe.recipemanagementapp.entity.Recipe;
@@ -50,32 +54,11 @@ class RecipeControllerTest {
         recipeController = new RecipeController(recipeService);
     }
     @Test
-    void getRecipe() throws Exception {
-        RecipeResponse recipeResponse = RecipeTestDataFactory.getRecipeResponse();
-        when(recipeService.getAllRecipes()).thenReturn(recipeResponse);
-        this.mvc
-                .perform(get("/recipe"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.count").value(1))
-                .andExpect(jsonPath("$.recipes[0].name").value("Pinoy Adobo"));
-    }
-    @Test
-    void getRecipeNoRecord() throws Exception {
-        when(recipeService.getAllRecipes()).thenReturn(new RecipeResponse());
-        this.mvc
-                .perform(get("/recipe"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.count").value(0))
-                .andExpect(jsonPath("$.recipes").isEmpty());
-    }
-    @Test
-    void getRecipeById() throws Exception {
-        Recipe recipe = RecipeTestDataFactory.createRecipeTestData();
+    void getRecipeById_successful() throws Exception {
+        RecipeDto recipe = RecipeTestDataFactory.createRecipeTestData();
         when(recipeService.getRecipeById(1L)).thenReturn(recipe);
         this.mvc
-                .perform(get("/recipe/1"))
+                .perform(get("/recipes/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value("Pinoy Adobo"))
@@ -83,24 +66,24 @@ class RecipeControllerTest {
     }
 
     @Test
-    void getRecipeById_NotFound() throws Exception {
+    void getRecipeById_recipe_not_found() throws Exception {
         long id = 1;
         RecipeNotFoundException exception = new RecipeNotFoundException(
                 String.format("Recipe with id %d not found", id));
         when(recipeService.getRecipeById(id)).thenThrow(exception);
         this.mvc
-                .perform(get("/recipe/1"))
+                .perform(get("/recipes/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value(404))
                 .andExpect(jsonPath("$.message").value("Recipe with id 1 not found"));
     }
 
     @Test
-    void searchRecipe() throws Exception {
+    void searchRecipe_with_1_record() throws Exception {
         RecipeResponse recipeResponse = RecipeTestDataFactory.getRecipeResponse();
-        when(recipeService.searchRecipe(any(RecipeSearchRequest.class))).thenReturn(recipeResponse);
+        when(recipeService.searchRecipes(any(RecipeSearchRequest.class))).thenReturn(recipeResponse);
         this.mvc
-                .perform(get("/recipe/search"))
+                .perform(get("/recipes/search?category=VEGETARIAN&instruction=cook&serving=4&ingredient&ingredientInclude=garlic&ingredientExclude=onion"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.count").value(1))
@@ -108,28 +91,41 @@ class RecipeControllerTest {
     }
 
     @Test
-    void createRecipe() throws Exception {
-        Recipe recipe = RecipeTestDataFactory.createRecipeTestData();
-        doNothing().when(recipeService).createRecipe(recipe);
-
+    void searchRecipe_invalid_serving_filter() throws Exception {
+        RecipeResponse recipeResponse = RecipeTestDataFactory.getRecipeResponse();
+        when(recipeService.searchRecipes(any(RecipeSearchRequest.class))).thenReturn(recipeResponse);
         this.mvc
-                .perform(post("/recipe")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(mapper.writeValueAsString(recipe)))
-                .andExpect(status().isCreated())
-                .andExpect(content().string("Successfully Created"));
+                .perform(get("/recipes/search?serving=invalid"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("MethodArgumentNotValidException encountered."))
+                .andExpect(jsonPath("$.errorMessagesMap.serving").value("""
+                        Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; For input string: "invalid\""""));
     }
 
     @Test
-    void createRecipe_AlreadyExist() throws Exception {
-        Recipe recipe = RecipeTestDataFactory.createRecipeTestData();
+    void createRecipe_successful() throws Exception {
+        RecipeDto recipe = RecipeTestDataFactory.createRecipeTestData();
+        when(recipeService.createRecipe(recipe)).thenReturn(recipe);
+
+        this.mvc
+                .perform(post("/recipes")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(mapper.writeValueAsString(recipe)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
+    }
+
+    @Test
+    void createRecipe_recipe_already_exist() throws Exception {
+        RecipeDto recipe = RecipeTestDataFactory.createRecipeTestData();
         RecipeAlreadyExistException exception = new RecipeAlreadyExistException(
                 String.format("Recipe %s already exist", recipe.getName())
         );
         doThrow(exception).when(recipeService).createRecipe(recipe);
 
         this.mvc
-                .perform(post("/recipe")
+                .perform(post("/recipes")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(mapper.writeValueAsString(recipe)))
                 .andExpect(status().isBadRequest())
@@ -140,12 +136,12 @@ class RecipeControllerTest {
 
     @Test
     void createRecipe_duplicate_ingredient() throws Exception {
-        Recipe recipe = RecipeTestDataFactory.createRecipeTestData();
+        RecipeDto recipe = RecipeTestDataFactory.createRecipeTestData();
         IngredientAlreadyExistException exception = new IngredientAlreadyExistException("Duplicate ingredients found.");
         doThrow(exception).when(recipeService).createRecipe(recipe);
 
         this.mvc
-                .perform(post("/recipe")
+                .perform(post("/recipes")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(mapper.writeValueAsString(recipe)))
                 .andExpect(status().isBadRequest())
@@ -153,49 +149,43 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$.message").value("Duplicate ingredients found."));
     }
 
-    @Test
-    void createRecipes() throws Exception {
-        List<Recipe> recipes = List.of(RecipeTestDataFactory.createRecipeTestData());
-        doNothing().when(recipeService).createRecipes(recipes);
-
-        this.mvc
-                .perform(post("/recipe/all")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(mapper.writeValueAsString(recipes)))
-                .andExpect(status().isCreated())
-                .andExpect(content().string("Successfully Created"));
-    }
 
     @Test
-    void createRecipes_at_least_one_already_exist() throws Exception {
-        List<Recipe> recipes = List.of(RecipeTestDataFactory.createRecipeTestData());
-        RecipeAlreadyExistException exception = new RecipeAlreadyExistException(
-                String.format("Recipe %s already exist", recipes.get(0).getName())
-        );
-        doThrow(exception).when(recipeService).createRecipes(recipes);
+    void createRecipe_all_required_fields_invalid() throws Exception {
+
+        RecipeDto recipe = RecipeTestDataFactory.createRecipeDtoAllFieldsInvalid();
+        when(recipeService.createRecipe(recipe)).thenReturn(recipe);
 
         this.mvc
-                .perform(post("/recipe/all")
+                .perform(post("/recipes")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(mapper.writeValueAsString(recipes)))
+                        .content(mapper.writeValueAsString(recipe)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(400))
-                .andExpect(jsonPath("$.message")
-                        .value(String.format("Recipe %s already exist", recipes.get(0).getName())));
+                .andExpect(jsonPath("$.message").value("MethodArgumentNotValidException encountered."))
+                .andExpect(jsonPath("$.errorMessagesMap.instructions").value("Instruction must have at least one entry."))
+                .andExpect(jsonPath("$.errorMessagesMap.name").value(MessageConstants.NOT_BLANK_MESSAGE))
+                .andExpect(jsonPath("$.errorMessagesMap.cookTime").value("Cooking time should not be less than 1."))
+                .andExpect(jsonPath("$.errorMessagesMap.ingredients").value("Ingredient must have at least one entry."))
+                .andExpect(jsonPath("$.errorMessagesMap.description").value(MessageConstants.NOT_BLANK_MESSAGE))
+                .andExpect(jsonPath("$.errorMessagesMap.cuisine").value(MessageConstants.NOT_BLANK_MESSAGE))
+                .andExpect(jsonPath("$.errorMessagesMap.category").value(MessageConstants.NOT_BLANK_MESSAGE))
+                .andExpect(jsonPath("$.errorMessagesMap.prepTimeUnit").value(MessageConstants.NOT_BLANK_MESSAGE))
+                .andExpect(jsonPath("$.errorMessagesMap.cookTimeUnit").value(MessageConstants.NOT_BLANK_MESSAGE))
+                .andExpect(jsonPath("$.errorMessagesMap.prepTime").value("Preparation time should not be less than 1."))
+                .andExpect(jsonPath("$.errorMessagesMap.serving").value("Serving should not be less than 1."));
     }
-
     @Test
-    void deleteRecipe() throws Exception {
+    void deleteRecipe_successful() throws Exception {
         doNothing().when(recipeService).deleteRecipeById(1L);
 
         this.mvc
-                .perform(delete("/recipe/{recipeId}", "1"))
+                .perform(delete("/recipes/{recipeId}", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Successfully Deleted"));
     }
 
     @Test
-    void deleteRecipe_Not_Existing() throws Exception {
+    void deleteRecipe_recipe_not_found() throws Exception {
         long id = 1;
         RecipeNotFoundException exception = new RecipeNotFoundException(
                 String.format("Can't delete recipe with id %d. Id not found.", id)
@@ -203,7 +193,7 @@ class RecipeControllerTest {
         doThrow(exception).when(recipeService).deleteRecipeById(id);
 
         this.mvc
-                .perform(delete("/recipe/{recipeId}", "1"))
+                .perform(delete("/recipes/{recipeId}", "1"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value(404))
                 .andExpect(jsonPath("$.message").value(
@@ -212,21 +202,21 @@ class RecipeControllerTest {
     }
 
     @Test
-    void updateRecipe() throws Exception {
-        Recipe recipe = RecipeTestDataFactory.createRecipeTestData();
-        doNothing().when(recipeService).updateRecipeById(recipe, 1);
+    void updateRecipe_successful() throws Exception {
+        RecipeDto recipe = RecipeTestDataFactory.createRecipeTestData();
+        when(recipeService.updateRecipeById(recipe, 1)).thenReturn(recipe);
 
         this.mvc
-                .perform(patch("/recipe/{recipeId}", "1")
+                .perform(put("/recipes/{recipeId}", "1")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(mapper.writeValueAsString(recipe)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Successfully Updated"));
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
-    void updateRecipe_not_found() throws Exception {
-        Recipe recipe = RecipeTestDataFactory.createRecipeTestData();
+    void updateRecipe_recipe_not_found() throws Exception {
+        RecipeDto recipe = RecipeTestDataFactory.createRecipeTestData();
         long id = 1;
         RecipeNotFoundException exception = new RecipeNotFoundException(
                 String.format("Recipe with id %d not found", id));
@@ -234,7 +224,7 @@ class RecipeControllerTest {
         doThrow(exception).when(recipeService).updateRecipeById(recipe, 1);
 
         this.mvc
-                .perform(patch("/recipe/{recipeId}", "1")
+                .perform(put("/recipes/{recipeId}", "1")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(mapper.writeValueAsString(recipe)))
                 .andExpect(status().isNotFound())

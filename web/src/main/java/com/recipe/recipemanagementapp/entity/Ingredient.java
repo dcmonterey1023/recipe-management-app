@@ -2,6 +2,7 @@ package com.recipe.recipemanagementapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.recipe.recipemanagementapp.constants.MessageConstants;
+import com.recipe.recipemanagementapp.constants.UnitOfMeasure;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -21,13 +22,10 @@ public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank(message = MessageConstants.NOT_BLANK_MESSAGE)
     private String name;
-    @DecimalMin(value = "0.01")
     private double amount;
-    @NotBlank(message = MessageConstants.NOT_BLANK_MESSAGE)
-    private String unitOfMeasure;
+    @Enumerated(value = EnumType.STRING)
+    private UnitOfMeasure unitOfMeasure;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
     private Recipe recipe;
 }

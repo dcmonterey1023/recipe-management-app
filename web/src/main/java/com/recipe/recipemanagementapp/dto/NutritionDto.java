@@ -1,27 +1,27 @@
-package com.recipe.recipemanagementapp.entity;
+package com.recipe.recipemanagementapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.recipe.recipemanagementapp.constants.MessageConstants;
-import jakarta.persistence.*;
+import com.recipe.recipemanagementapp.entity.Recipe;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Entity
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(exclude = "recipe")
-public class Nutrition {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class NutritionDto {
     private long id;
+    @Size(max = 50, message = MessageConstants.NOT_BLANK_MESSAGE)
     private String name;
+    @DecimalMin("0.000001")
+    @DecimalMax("100.00")
     private double percent;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Recipe recipe;
-
 }

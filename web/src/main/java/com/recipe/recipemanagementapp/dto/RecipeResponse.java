@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-public record RecipeResponse(List<Recipe> recipes, int count) {
+public record RecipeResponse(List<RecipeDto> recipes, int count) {
     public RecipeResponse(){
         this(new ArrayList<>(), 0);
     }
